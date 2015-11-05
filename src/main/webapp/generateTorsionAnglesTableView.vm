@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="container">
+        #foreach( $fragment in $compactFragmentsList )
+<!--               <table class="table-striped" style="float: left;border-spacing: 10px;">-->
+        <div class="table-responsive">    
+            <table class="table-striped">
+                <tr>
+                    #set ( $colspan1 = $fragment.getResidues().size() + 1 )
+                    <th colspan=$colspan1>
+                        $fragment.getName()
+                    </th>
+                </tr>
+                <tr>
+                    <td> PDB name </td>
+                    <td> Symbol </td>
+                    <td> Res no. </td>
+                    #foreach( $angle in $torsionAnglesType )
+                        <td> $greekAnglesNames.get($angle.toString().toLowerCase()) </td>
+                    #end
+                </tr>
+                #foreach( $residue in $fragment.getResidues() )
+                    <tr>
+                        <td>$residue.getOriginalResidueName()</td>
+                        <td>$residue.getOneLetterName()</td>
+                        <td>$residue.getResidueNumber()$residue.getInsertionCode()</td>
+                        #foreach( $angle in $torsionAnglesType )
+                            #set ($angleValue = $fragment.getTorsionAngleValue($residue, $angle).getValue())
+                            #set ($invalid = "invalid")
+                            #if ($angleValue == $invalid)
+                                #set ($angleValue = "-")
+                            #else 
+                                #set ($angleValue = $fragment.getTorsionAngleValue($residue, $angle).getValue().getDegrees())
+                            #end
+                            <td>$angleValue</td>
+                        #end
+                    </tr>
+                #end
+            </table>
+        </div>
+        #end
+    </div>
+</div>
