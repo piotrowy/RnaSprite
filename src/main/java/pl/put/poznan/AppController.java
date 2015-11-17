@@ -43,6 +43,13 @@ public class AppController {
 	}
 
 	@GET
+	@Path("sendMail")
+	public void sendMail() {
+		Mail mail = new Mail("petr.ceranek@gmail.com", null);
+		mail.sendMail("hw", "hello world!");
+	}
+
+	@GET
 	@Path("downloadDistanceMatrixFromPdb")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DistanceMatrix getDistanceMatrixFromPDB(
