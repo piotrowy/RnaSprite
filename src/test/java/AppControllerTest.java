@@ -14,7 +14,12 @@ public class AppControllerTest {
     }
 
     @Test
-    public void testEmptyStringAsPdb() {
+    public void testGetAnglesFromPDBEmptyPDBId() {
         appController.getAnglesFromPDB("");
+    }
+
+    @Test
+    public void testGetAnglesFromPDBInvalidPDBId() {
+        appController.getAnglesFromPDB("qwerty");
     }
 }
