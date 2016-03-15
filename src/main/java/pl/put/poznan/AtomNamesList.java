@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import pl.poznan.put.atom.AtomName;
@@ -37,10 +38,7 @@ public class AtomNamesList {
         atomNames.addAll(Guanine.getInstance().getAtoms());
         atomNames.addAll(Cytosine.getInstance().getAtoms());
         atomNames.addAll(Uracil.getInstance().getAtoms());
-        List<String> namesList = new ArrayList<>();
-        for(AtomName name : atomNames){
-            namesList.add(name.getName());
-        }
+        List<String> namesList = atomNames.stream().map(AtomName::getName).collect(Collectors.toList());
         this.list = namesList;
     }
     
