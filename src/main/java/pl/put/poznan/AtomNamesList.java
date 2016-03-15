@@ -26,11 +26,12 @@ import pl.poznan.put.rna.base.Uracil;
  */
 @XmlRootElement
 public class AtomNamesList {
-    
+
+    private static List <String> staticList;
     @XmlElement
     private List <String> list;
 
-    public AtomNamesList(){
+    static {
         Set<AtomName> atomNames = new LinkedHashSet<>();
         atomNames.addAll(Phosphate.getInstance().getAtoms());
         atomNames.addAll(Ribose.getInstance().getAtoms());
@@ -38,8 +39,11 @@ public class AtomNamesList {
         atomNames.addAll(Guanine.getInstance().getAtoms());
         atomNames.addAll(Cytosine.getInstance().getAtoms());
         atomNames.addAll(Uracil.getInstance().getAtoms());
-        List<String> namesList = atomNames.stream().map(AtomName::getName).collect(Collectors.toList());
-        this.list = namesList;
+        staticList = atomNames.stream().map(AtomName::getName).collect(Collectors.toList());
+    }
+
+    public AtomNamesList(){
+        this.list = staticList;
     }
     
     /**
