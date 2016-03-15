@@ -11,6 +11,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.apache.log4j.Logger;
 import pl.poznan.put.pdb.analysis.PdbChain;
 import pl.poznan.put.pdb.analysis.PdbCompactFragment;
 import pl.poznan.put.pdb.analysis.PdbResidue;
@@ -26,6 +28,8 @@ public class Matrix {
     @XmlJavaTypeAdapter(ListAdapter.class)
     @XmlElement
     protected List<List<? extends Row>> matrix;
+
+    final private static Logger logger = Logger.getLogger(Matrix.class);
     
     public Matrix(){
         

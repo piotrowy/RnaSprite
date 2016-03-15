@@ -28,10 +28,8 @@ public class ChainsIdList {
     
     public ChainsIdList(StructureContainer strC) {
         if (!strC.getStructureList().isEmpty()) {
-            int index = 0;
             list = new ArrayList<>();
             for (PdbModel model : strC.getStructureList()) {
-                index++;
                 model.getChains().stream().filter(chain -> !this.list.contains(chain.toString())).forEach(ch -> {
                     this.list.add(ch.toString());
                 });
@@ -49,7 +47,7 @@ public class ChainsIdList {
     /**
      * @param list the list to set
      */
-    public void setChainsList(List <String> list) {
+    public void setList(List <String> list) {
         this.list = list;
     }
     

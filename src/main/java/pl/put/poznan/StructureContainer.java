@@ -11,10 +11,9 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import pl.poznan.put.constant.Unicode;
 
 import pl.poznan.put.pdb.PdbParsingException;
@@ -38,6 +37,8 @@ public class StructureContainer {
     private Response respIfNull;
     private static Map<String, String> greekAnglesNames = fillGreekAnglesNames();
 
+    final private static Logger logger = Logger.getLogger(StructureContainer.class);
+
     /**
      *
      * @param pdbId - name of pdb model
@@ -49,7 +50,7 @@ public class StructureContainer {
         } catch (IOException | PdbParsingException ex) {
             String failureMessage = "Nie znaleziono podanej nazwy w bazie.";
             respIfNull = Response.status(Response.Status.BAD_REQUEST).entity(failureMessage + '\n' + ex).build();
-            Logger.getLogger(StructureContainer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.warn(ex);
         }
     }
 
@@ -64,7 +65,7 @@ public class StructureContainer {
         } catch (IOException | PdbParsingException ex) {
             String failureMessage = "Nieprawidłowy plik PDB.";
             respIfNull = Response.status(Response.Status.BAD_REQUEST).entity(failureMessage + '\n' + ex).build();
-            Logger.getLogger(StructureContainer.class.getName()).log(Level.SEVERE, null, ex);
+            logger.warn(ex);
         }
     }
 

@@ -19,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -89,24 +90,18 @@ public class AppController {
 
         try {
             uploadedFileLocation = File.createTempFile("RNAsprite", ".pdb");
-        } catch (IOException ex) {
-            logger.warn(ex);
-            failMessage += ex;
-        }
-        // writeToFile(uploadedInputStream, uploadedFileLocation);
-        try {
             outputStream = new FileOutputStream(uploadedFileLocation);
             IOUtils.copy(uploadedInputStream, outputStream);
             String output = "File uploaded to : " + uploadedFileLocation;
             logger.info(output);
             StructureContainer structureModel = new StructureContainer(
                     uploadedFileLocation);
-            return Response.status(200).entity(output).build();
+            return Response.status(200).entity(structureModel).build();
         } catch (IOException  ex) {
             logger.warn(ex);
             failMessage += ex;
         } finally {
-            uploadedFileLocation.delete();
+            FileUtils.deleteQuietly(uploadedFileLocation);
             IOUtils.closeQuietly(outputStream);
         }
         return Response.status(500).entity(failMessage).build();
