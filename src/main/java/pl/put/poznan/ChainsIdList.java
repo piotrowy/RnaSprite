@@ -6,6 +6,7 @@
 package pl.put.poznan;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -41,7 +42,7 @@ public class ChainsIdList {
      * @return the list
      */
     public List <String> getList() {
-        return list;
+        return Collections.unmodifiableList(list);
     }
 
     /**
