@@ -7,6 +7,7 @@ package pl.put.poznan;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
@@ -30,9 +31,7 @@ public class ListAdapter extends XmlAdapter<ListAdapter.AdaptedList, List<List<?
     @Override
     public List<List<? extends Row>> unmarshal(AdaptedList adaptedList) throws Exception {
         List<List<? extends Row>> list = new ArrayList<>();
-        for(Model entry : adaptedList.model) {
-            list.add(entry.value);
-        }
+        list.addAll(adaptedList.model.stream().map(entry -> entry.value).collect(Collectors.toList()));
         return list;
     }
 

@@ -5,10 +5,10 @@
  */
 package pl.put.poznan;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import pl.poznan.put.atom.AtomName;
@@ -25,11 +25,12 @@ import pl.poznan.put.rna.base.Uracil;
  */
 @XmlRootElement
 public class AtomNamesList {
-    
+
+    private static List <String> staticList;
     @XmlElement
     private List <String> list;
 
-    public AtomNamesList(){
+    static {
         Set<AtomName> atomNames = new LinkedHashSet<>();
         atomNames.addAll(Phosphate.getInstance().getAtoms());
         atomNames.addAll(Ribose.getInstance().getAtoms());
@@ -37,11 +38,11 @@ public class AtomNamesList {
         atomNames.addAll(Guanine.getInstance().getAtoms());
         atomNames.addAll(Cytosine.getInstance().getAtoms());
         atomNames.addAll(Uracil.getInstance().getAtoms());
-        List<String> namesList = new ArrayList<>();
-        for(AtomName name : atomNames){
-            namesList.add(name.getName());
-        }
-        this.list = namesList;
+        staticList = atomNames.stream().map(AtomName::getName).collect(Collectors.toList());
+    }
+
+    public AtomNamesList(){
+        this.list = staticList;
     }
     
     /**

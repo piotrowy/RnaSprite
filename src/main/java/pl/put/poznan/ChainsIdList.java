@@ -6,6 +6,7 @@
 package pl.put.poznan;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,20 +24,16 @@ public class ChainsIdList {
     private List <String> list;
     
     public ChainsIdList() {
-        
+        this.list = Collections.EMPTY_LIST;
     }
     
     public ChainsIdList(StructureContainer strC) {
         if (!strC.getStructureList().isEmpty()) {
-            int index = 0;
             list = new ArrayList<>();
             for (PdbModel model : strC.getStructureList()) {
-                index++;
-                for (PdbChain chain : model.getChains()) {
-                    if(!this.list.contains(chain.toString())){
-                        this.list.add(chain.toString());
-                    }
-                }
+                model.getChains().stream().filter(chain -> !this.list.contains(chain.toString())).forEach(ch -> {
+                    this.list.add(ch.toString());
+                });
             }
         }
     }
@@ -45,13 +42,13 @@ public class ChainsIdList {
      * @return the list
      */
     public List <String> getList() {
-        return list;
+        return Collections.unmodifiableList(list);
     }
 
     /**
      * @param list the list to set
      */
-    public void setChainsList(List <String> list) {
+    public void setList(List <String> list) {
         this.list = list;
     }
     

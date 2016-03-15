@@ -37,7 +37,8 @@ public class TorsionAngleMatrix extends Matrix{
     private List<String> angleNames;
 
     public TorsionAngleMatrix() {
-
+        super();
+        this.angleNames = Collections.EMPTY_LIST;
     }
 
     public TorsionAngleMatrix(StructureContainer strC) {

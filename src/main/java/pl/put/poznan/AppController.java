@@ -19,7 +19,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -31,6 +33,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 public class AppController {
 
 	private static String emailContent;
+	final static Logger logger = Logger.getLogger(AppController.class);
 
 	@GET
 	@Path("downloadTorsionAnglesFromPdb")
@@ -85,29 +88,31 @@ public class AppController {
 	@Produces(MediaType.TEXT_HTML)
 	public Response getAnglesFromFile(
 			@FormDataParam("modelFile") InputStream uploadedInputStream,
-			@FormDataParam("modelFile") FormDataContentDisposition fileDetail)
-			throws IOException {
+			@FormDataParam("modelFile") FormDataContentDisposition fileDetail) {
 
-		File uploadedFileLocation = File.createTempFile("RNAsprite", ".pdb");
 
-		// writeToFile(uploadedInputStream, uploadedFileLocation);
-		FileOutputStream outputStream = null;
-		try {
-			outputStream = new FileOutputStream(uploadedFileLocation);
-			IOUtils.copy(uploadedInputStream, outputStream);
-			String output = "File uploaded to : " + uploadedFileLocation;
-			System.out.println(output);
-			StructureContainer structureModel = new StructureContainer(
-					uploadedFileLocation);
-			return Response.status(200).entity(output).build();
-		} catch (Exception ex) {
-			// response error
-		} finally {
-			uploadedFileLocation.delete();
-			IOUtils.closeQuietly(outputStream);
-		}
-		return null;
-	}
+        File uploadedFileLocation = null;
+        FileOutputStream outputStream = null;
+        String failMessage = "Server failed ";
+
+        try {
+            uploadedFileLocation = File.createTempFile("RNAsprite", ".pdb");
+            outputStream = new FileOutputStream(uploadedFileLocation);
+            IOUtils.copy(uploadedInputStream, outputStream);
+            String output = "File uploaded to : " + uploadedFileLocation;
+            logger.info(output);
+            StructureContainer structureModel = new StructureContainer(
+                    uploadedFileLocation);
+            return Response.status(200).entity(structureModel).build();
+        } catch (IOException  ex) {
+            logger.warn(ex);
+            failMessage += ex;
+        } finally {
+            FileUtils.deleteQuietly(uploadedFileLocation);
+            IOUtils.closeQuietly(outputStream);
+        }
+        return Response.status(500).entity(failMessage).build();
+    }
 
 	@GET
 	@Path("sendEmail")
