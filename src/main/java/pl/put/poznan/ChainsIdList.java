@@ -32,11 +32,9 @@ public class ChainsIdList {
             list = new ArrayList<>();
             for (PdbModel model : strC.getStructureList()) {
                 index++;
-                for (PdbChain chain : model.getChains()) {
-                    if(!this.list.contains(chain.toString())){
-                        this.list.add(chain.toString());
-                    }
-                }
+                model.getChains().stream().filter(chain -> !this.list.contains(chain.toString())).forEach(ch -> {
+                    this.list.add(ch.toString());
+                });
             }
         }
     }
