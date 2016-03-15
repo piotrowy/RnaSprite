@@ -29,15 +29,15 @@ import pl.poznan.put.pdb.analysis.PdbResidue;
 public class DistanceMatrix extends Matrix {
 
 	public DistanceMatrix() {
-
+		this.matrix = Collections.EMPTY_LIST;
 	}
 
 	public DistanceMatrix(StructureContainer strC, String chainIdentifier,
 			String at1, String at2) {
-		this.matrix = this.getDistanceMatrix(strC, chainIdentifier, at1, at2);
+		this.matrix = this.generateDistanceMatrix(strC, chainIdentifier, at1, at2);
 	}
 
-	public List<List<? extends Row>> getDistanceMatrix(StructureContainer strC,
+	private List<List<? extends Row>> generateDistanceMatrix(StructureContainer strC,
 			String chainIdentifier, String at1, String at2) {
 		if (!strC.getStructureList().isEmpty()) {
 			int index = 0;
