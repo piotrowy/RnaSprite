@@ -6,6 +6,7 @@
 package pl.put.poznan;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -32,7 +33,7 @@ public class Row {
     private String chain;
 
     public Row() {
-        this.row = new ArrayList<>();
+        this.row = Collections.EMPTY_LIST;
     }
 
     public Row(List<String> row, int model, String chain) {

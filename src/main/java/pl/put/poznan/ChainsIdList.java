@@ -24,7 +24,7 @@ public class ChainsIdList {
     private List <String> list;
     
     public ChainsIdList() {
-        
+        this.list = Collections.EMPTY_LIST;
     }
     
     public ChainsIdList(StructureContainer strC) {

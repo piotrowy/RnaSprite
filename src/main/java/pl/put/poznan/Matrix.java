@@ -5,6 +5,7 @@
  */
 package pl.put.poznan;
 
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -32,7 +33,7 @@ public class Matrix {
     final private static Logger logger = Logger.getLogger(Matrix.class);
     
     public Matrix(){
-        
+        this.matrix = Collections.EMPTY_LIST;
     }
 
         

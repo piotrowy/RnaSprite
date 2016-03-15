@@ -29,7 +29,7 @@ import pl.poznan.put.pdb.analysis.PdbResidue;
 public class DistanceMatrix extends Matrix {
 
 	public DistanceMatrix() {
-		this.matrix = Collections.EMPTY_LIST;
+		super();
 	}
 
 	public DistanceMatrix(StructureContainer strC, String chainIdentifier,
