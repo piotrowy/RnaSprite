@@ -115,7 +115,14 @@ public class AppController {
         return Response.status(500).entity(failMessage).build();
     }
     
-    //// TODO: 22.03.2016 - metody do plikow
-    //// TODO: 22.03.2016 -  wypluwanie csv
-    //// TODO: 22.03.2016 - metoda do pliku konfiguracyjnego 
+    // TODO: 22.03.2016 - metody do plikow
+    // TODO: 22.03.2016 -  wypluwanie csv
+    // TODO: 22.03.2016 - metoda do pliku konfiguracyjnego
+	// TODO: 31.03.2016 - forna pozytac d3js.org
+	// TODO: 31.03.2016 - sesja, nie ladowac 10x tego samego
+	// TODO: 31.03.2016 - metoda distancematrix ze szczegolwym definiowaniem atomow A63A,5;[...] - dla katow tez, ktore katy
+	// TODO: 31.03.2016 - jsmol wyswietlanie struktury
+	// TODO: 31.03.2016 - svg plik do wysylania na mejla
+	// TODO: 31.03.2016 - statyczna mapa do taskow + listener do czyszczenia
+
 }
