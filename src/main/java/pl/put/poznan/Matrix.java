@@ -36,7 +36,6 @@ public class Matrix {
         this.matrix = Collections.EMPTY_LIST;
     }
 
-        
     protected PdbCompactFragment pdbChainToCompactFragment(PdbChain chain) {
         List<PdbResidue> residues = chain.getResidues();
         String name = String.valueOf(chain.getIdentifier());
@@ -56,5 +55,4 @@ public class Matrix {
     public void setMatrix(List<List<? extends Row>> matrix) {
         this.matrix = matrix;
     }
-    
 }

@@ -46,13 +46,6 @@ public class AppController {
 	}
 
 	@GET
-	@Path("sendMail")
-	public void sendMail() {
-		Mail mail = new Mail("petr.ceranek@gmail.com", null);
-		mail.sendMail("hw", "hello world!");
-	}
-
-	@GET
 	@Path("downloadDistanceMatrixFromPdb")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DistanceMatrix getDistanceMatrixFromPDB(
@@ -80,6 +73,14 @@ public class AppController {
 		StructureContainer container = new StructureContainer(structurePDB);
 		ChainsIdList chainsList = new ChainsIdList(container);
 		return chainsList;
+	}
+
+	@GET
+	@Path("sendMail")
+    @Produces(MediaType.TEXT_PLAIN)
+	public void sendMail() {
+		Mail mail = new Mail("petr.ceranek@gmail.com", null);
+		mail.sendMail("hw", "hello world!");
 	}
 
 	@POST
@@ -113,12 +114,8 @@ public class AppController {
         }
         return Response.status(500).entity(failMessage).build();
     }
-
-	@GET
-	@Path("sendEmail")
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response sendEmail(@QueryParam("sentTo") String sentTo) {
-
-		return null;
-	}
+    
+    //// TODO: 22.03.2016 - metody do plikow
+    //// TODO: 22.03.2016 -  wypluwanie csv
+    //// TODO: 22.03.2016 - metoda do pliku konfiguracyjnego 
 }

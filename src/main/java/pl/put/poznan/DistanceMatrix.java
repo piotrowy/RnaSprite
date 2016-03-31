@@ -47,17 +47,17 @@ public class DistanceMatrix extends Matrix {
         }
     }
 
-    private List<DistanceMatrixRow> calculateDistancesInChains(PdbModel model, int index, String chainIdentifier, String at1, String at2) {
+    private List<DistanceMatrixRow> calculateDistancesInChains(PdbModel model, int modelNumber, String chainIdentifier, String at1, String at2) {
         PdbChain chain = model.getChains().stream().filter(ch -> ch.toString().equalsIgnoreCase(
                 chainIdentifier)).findFirst().get();
-        return calculateDistancesBetweenResiduesOuter(index, chain.toString(),
+        return calculateDistancesBetweenResiduesOuter(modelNumber, chain.toString(),
                 pdbChainToCompactFragment(chain), at1, at2);
     }
 
-    private List<DistanceMatrixRow> calculateDistancesBetweenResiduesOuter(int index, String chain, PdbCompactFragment fragment, String at1, String at2) {
+    private List<DistanceMatrixRow> calculateDistancesBetweenResiduesOuter(int modelNumber, String chain, PdbCompactFragment fragment, String at1, String at2) {
         return fragment.getResidues().stream().map(res -> new DistanceMatrixRow(
                 calculateDistancesBetweenResiduesInner(fragment, res, at1, at2),
-                res.getOneLetterName() + "" + res.getResidueNumber(), index, chain)).collect(Collectors.toList());
+                res.getOneLetterName() + "" + res.getResidueNumber(), modelNumber, chain)).collect(Collectors.toList());
     }
 
     private List<String> calculateDistancesBetweenResiduesInner(PdbCompactFragment fragment, PdbResidue residue,
