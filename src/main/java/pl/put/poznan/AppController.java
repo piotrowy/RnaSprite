@@ -5,25 +5,22 @@
  */
 package pl.put.poznan;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.JSONObject;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -32,8 +29,116 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Path("/options")
 public class AppController {
 
-	private static String emailContent;
 	final static Logger logger = Logger.getLogger(AppController.class);
+	private Map<UUID, SessionData> sessionMap;
+    private Timer timer;
+
+	public AppController () {
+		this.sessionMap = new HashMap<>();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                Date d = new Date();
+                sessionMap.entrySet().stream().filter(
+                        map -> TimeUnit.MILLISECONDS.toMinutes(d.getTime() - map.getValue().getTime().getTime()) <= 30).
+                        forEach(map -> sessionMap.remove(map.getKey()));
+            }
+        };
+        this.timer = new Timer();
+        timer.scheduleAtFixedRate(timerTask, 0, 60000);
+	}
+
+	@GET
+	@Path("upload-structure-pdbid")
+	@Produces(MediaType.APPLICATION_JSON)
+	public JSONObject uploadStructure (@QueryParam("structurePDB") String structurePDB) {
+		String id = generateSessionData(new StructureContainer(structurePDB));
+		JSONObject resultJSON = new JSONObject();
+        resultJSON.put("id", id);
+		return resultJSON;
+	}
+
+	@POST
+	@Path("/upload-structure-file")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.TEXT_HTML)
+	public JSONObject uploadStructure(@FormDataParam("modelFile") InputStream uploadedInputStream,
+                                      @FormDataParam("modelFile") FormDataContentDisposition fileDetail) {
+        File uploadedFileLocation = null;
+        FileOutputStream outputStream = null;
+        String failMessage = "Server failed: ";
+        JSONObject resultJSON = new JSONObject();
+
+        try {
+            uploadedFileLocation = File.createTempFile("RNAsprite", ".pdb");
+            outputStream = new FileOutputStream(uploadedFileLocation);
+            IOUtils.copy(uploadedInputStream, outputStream);
+            String output = "File uploaded to : " + uploadedFileLocation;
+            logger.info(output);
+            String id = generateSessionData(new StructureContainer(
+                    uploadedFileLocation));
+            resultJSON.put("id", id);
+            return resultJSON;
+        } catch (IOException  ex) {
+            logger.warn(ex);
+            failMessage += ex;
+        } finally {
+            FileUtils.deleteQuietly(uploadedFileLocation);
+            IOUtils.closeQuietly(outputStream);
+        }
+        resultJSON.put("Message", failMessage);
+        return resultJSON;
+	}
+
+	private String generateSessionData(StructureContainer structure){
+		String id = UUID.randomUUID().toString();
+		this.sessionMap.put(UUID.fromString(id), new SessionData(structure, new Date()));
+		return id;
+	}
+
+	@GET
+	@Path("getAtomsList")
+	@Produces(MediaType.APPLICATION_JSON)
+	public AtomNamesList getAnglesList() {
+		return new AtomNamesList();
+	}
+
+	@GET
+	@Path("getChainsList")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ChainsIdList getChainsList(
+			@QueryParam("sessionId") String sessionId) {
+        this.sessionMap.get(sessionId).setTime(new Date());
+		return new ChainsIdList(this.sessionMap.get(UUID.fromString(sessionId)).getStructure());
+	}
+
+	@GET
+	@Path("downloadDistanceMatrixFromPdb")
+	@Produces(MediaType.APPLICATION_JSON)
+	public DistanceMatrix getDistanceMatrixFromPDB(
+			@QueryParam("sessionId") String sessionId,
+			@QueryParam("chain") String chain,
+			@QueryParam("at1") String at1,
+			@QueryParam("at2") String at2) {
+        this.sessionMap.get(sessionId).setTime(new Date());
+		DistanceMatrix mtx = new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(), chain, at1, at2);
+		return mtx;
+	}
+
+	@GET
+	@Path("downloadFragmentOfDistanceMatrixFromPdb")
+	@Produces(MediaType.APPLICATION_JSON)
+	public DistanceMatrix getFragmentOfDistanceMatrix(
+			@QueryParam("sessionId") String sessionId,
+			@QueryParam("fragmentsDefinition") List<String> fragmentsDefinition,
+			@QueryParam("paramList") List<String> paramList,
+			@QueryParam("at1") String at1,
+			@QueryParam("at2") String at2) {
+        this.sessionMap.get(sessionId).setTime(new Date());
+		DistanceMatrix mtx = new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
+                paramList, at1, at2);
+		return mtx;
+	}
 
 	@GET
 	@Path("downloadTorsionAnglesFromPdb")
@@ -45,35 +150,7 @@ public class AppController {
 		return mtx;
 	}
 
-	@GET
-	@Path("downloadDistanceMatrixFromPdb")
-	@Produces(MediaType.APPLICATION_JSON)
-	public DistanceMatrix getDistanceMatrixFromPDB(
-			@QueryParam("structurePDB") String structurePDB,
-			@QueryParam("chain") String chain, @QueryParam("at1") String at1,
-			@QueryParam("at2") String at2) {
-		StructureContainer container = new StructureContainer(structurePDB);
-		DistanceMatrix mtx = new DistanceMatrix(container, chain, at1, at2);
-		return mtx;
-	}
 
-	@GET
-	@Path("getAtomsList")
-	@Produces(MediaType.APPLICATION_JSON)
-	public AtomNamesList getAnglesList() {
-		AtomNamesList atomsList = new AtomNamesList();
-		return atomsList;
-	}
-
-	@GET
-	@Path("getChainsList")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ChainsIdList getChainsList(
-			@QueryParam("structurePDB") String structurePDB) {
-		StructureContainer container = new StructureContainer(structurePDB);
-		ChainsIdList chainsList = new ChainsIdList(container);
-		return chainsList;
-	}
 
 	@GET
 	@Path("sendMail")
@@ -124,5 +201,4 @@ public class AppController {
 	// TODO: 31.03.2016 - jsmol wyswietlanie struktury
 	// TODO: 31.03.2016 - svg plik do wysylania na mejla
 	// TODO: 31.03.2016 - statyczna mapa do taskow + listener do czyszczenia
-
 }

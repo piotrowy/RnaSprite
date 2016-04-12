@@ -38,10 +38,23 @@ public class DistanceMatrix extends Matrix {
         this.matrix = this.generateDistanceMatrix(strC, chainIdentifier, at1, at2);
     }
 
-    private List<List<? extends Row>> generateDistanceMatrix(StructureContainer strC, String chainIdentifier, String at1, String at2) {
+    public DistanceMatrix(StructureContainer strC, List<String> paramList,
+                          String at1, String at2) {
+        this.matrix = this.generateFragmentOfDistanceMatrix(strC, paramList, at1, at2);
+    }
+
+    public List<List<? extends Row>> generateDistanceMatrix(StructureContainer strC, String chainIdentifier, String at1, String at2) {
         if (!strC.getStructureList().isEmpty()) {
             return strC.getStructureList().stream().map(model -> calculateDistancesInChains(model,
                     model.getModelNumber(), chainIdentifier, at1, at2)).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public List<List<? extends Row>> generateFragmentOfDistanceMatrix(StructureContainer strC, List<String> paramList, String at1, String at2){
+        if (!strC.getStructureList().isEmpty()) {
+            return Collections.emptyList();
         } else {
             return Collections.emptyList();
         }
@@ -73,6 +86,11 @@ public class DistanceMatrix extends Matrix {
         return residue1.hasAtom(AtomName.fromString(at2)) && residue.hasAtom(AtomName.fromString(at1)) ? df2.format(
                 residue.findAtom(AtomName.fromString(at1)).distanceTo(residue1.findAtom(
                         AtomName.fromString(at2)))) + "" : "";
+    }
+
+    public List<String> parseParamList(List<String> paramList){
+        return Collections.emptyList();
+
     }
 }
 
