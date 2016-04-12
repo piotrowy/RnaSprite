@@ -14,13 +14,13 @@ import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  *
@@ -31,7 +31,6 @@ public class AppController {
 
 	final static Logger logger = Logger.getLogger(AppController.class);
 	private Map<UUID, SessionData> sessionMap;
-    private Timer timer;
 
 	public AppController () {
 		this.sessionMap = new HashMap<>();
@@ -39,12 +38,12 @@ public class AppController {
             @Override
             public void run() {
                 Date d = new Date();
-                sessionMap.entrySet().stream().filter(
-                        map -> TimeUnit.MILLISECONDS.toMinutes(d.getTime() - map.getValue().getTime().getTime()) <= 30).
-                        forEach(map -> sessionMap.remove(map.getKey()));
+                sessionMap.entrySet().stream().filter(map -> TimeUnit.MILLISECONDS.toMinutes(
+                        d.getTime() - map.getValue().getLastUseTime().getTime()) <= 30).forEach(
+                        map -> sessionMap.remove(map.getKey()));
             }
         };
-        this.timer = new Timer();
+        Timer timer = new Timer();
         timer.scheduleAtFixedRate(timerTask, 0, 60000);
 	}
 
@@ -59,7 +58,7 @@ public class AppController {
 	}
 
 	@POST
-	@Path("/upload-structure-file")
+	@Path("upload-structure-file")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.TEXT_HTML)
 	public JSONObject uploadStructure(@FormDataParam("modelFile") InputStream uploadedInputStream,
@@ -97,36 +96,35 @@ public class AppController {
 	}
 
 	@GET
-	@Path("getAtomsList")
+	@Path("atoms-list")
 	@Produces(MediaType.APPLICATION_JSON)
 	public AtomNamesList getAnglesList() {
 		return new AtomNamesList();
 	}
 
 	@GET
-	@Path("getChainsList")
+	@Path("chain-list")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ChainsIdList getChainsList(
 			@QueryParam("sessionId") String sessionId) {
-        this.sessionMap.get(sessionId).setTime(new Date());
+        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
 		return new ChainsIdList(this.sessionMap.get(UUID.fromString(sessionId)).getStructure());
 	}
 
 	@GET
-	@Path("downloadDistanceMatrixFromPdb")
+	@Path("distance-matrix")
 	@Produces(MediaType.APPLICATION_JSON)
-	public DistanceMatrix getDistanceMatrixFromPDB(
+	public DistanceMatrix getDistanceMatrix(
 			@QueryParam("sessionId") String sessionId,
 			@QueryParam("chain") String chain,
 			@QueryParam("at1") String at1,
 			@QueryParam("at2") String at2) {
-        this.sessionMap.get(sessionId).setTime(new Date());
-		DistanceMatrix mtx = new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(), chain, at1, at2);
-		return mtx;
+        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
+		return new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(), chain, at1, at2);
 	}
 
 	@GET
-	@Path("downloadFragmentOfDistanceMatrixFromPdb")
+	@Path("distance-matrix-fg")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DistanceMatrix getFragmentOfDistanceMatrix(
 			@QueryParam("sessionId") String sessionId,
@@ -134,62 +132,26 @@ public class AppController {
 			@QueryParam("paramList") List<String> paramList,
 			@QueryParam("at1") String at1,
 			@QueryParam("at2") String at2) {
-        this.sessionMap.get(sessionId).setTime(new Date());
-		DistanceMatrix mtx = new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
+        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
+        return new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
                 paramList, at1, at2);
-		return mtx;
 	}
 
 	@GET
-	@Path("downloadTorsionAnglesFromPdb")
+	@Path("downloadTorsionAngles")
 	@Produces(MediaType.APPLICATION_JSON)
 	public TorsionAngleMatrix getAnglesFromPDB(
-			@QueryParam("structurePDB") String structurePDB) {
-		StructureContainer container = new StructureContainer(structurePDB);
-		TorsionAngleMatrix mtx = new TorsionAngleMatrix(container);
-		return mtx;
+			@QueryParam("sessionId") String sessionId) {
+        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
+		return new TorsionAngleMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure());
 	}
-
-
 
 	@GET
-	@Path("sendMail")
+	@Path("send-mail")
     @Produces(MediaType.TEXT_PLAIN)
 	public void sendMail() {
-		Mail mail = new Mail("petr.ceranek@gmail.com", null);
-		mail.sendMail("hw", "hello world!");
-	}
-
-	@POST
-	@Path("/downloadTorsionAnglesFromFile")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces(MediaType.TEXT_HTML)
-	public Response getAnglesFromFile(
-			@FormDataParam("modelFile") InputStream uploadedInputStream,
-			@FormDataParam("modelFile") FormDataContentDisposition fileDetail) {
-
-
-        File uploadedFileLocation = null;
-        FileOutputStream outputStream = null;
-        String failMessage = "Server failed ";
-
-        try {
-            uploadedFileLocation = File.createTempFile("RNAsprite", ".pdb");
-            outputStream = new FileOutputStream(uploadedFileLocation);
-            IOUtils.copy(uploadedInputStream, outputStream);
-            String output = "File uploaded to : " + uploadedFileLocation;
-            logger.info(output);
-            StructureContainer structureModel = new StructureContainer(
-                    uploadedFileLocation);
-            return Response.status(200).entity(structureModel).build();
-        } catch (IOException  ex) {
-            logger.warn(ex);
-            failMessage += ex;
-        } finally {
-            FileUtils.deleteQuietly(uploadedFileLocation);
-            IOUtils.closeQuietly(outputStream);
-        }
-        return Response.status(500).entity(failMessage).build();
+        Mail mail = new Mail("petr.ceranek@gmail.com", null);
+        mail.sendMail("hw", "hello world!");
     }
     
     // TODO: 22.03.2016 - metody do plikow

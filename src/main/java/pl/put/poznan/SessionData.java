@@ -8,11 +8,11 @@ import java.util.Date;
 public class SessionData {
 
     private StructureContainer structure;
-    private Date time;
+    private Date lastUseTime;
 
     public SessionData (StructureContainer structure, Date time) {
         this.setStructure(structure);
-        this.setTime(time);
+        this.setLastUseTime(time);
     }
 
     public StructureContainer getStructure() {
@@ -23,11 +23,11 @@ public class SessionData {
         this.structure = structure;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getLastUseTime() {
+        return lastUseTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setLastUseTime(Date lastUseTime) {
+        this.lastUseTime = lastUseTime;
     }
 }

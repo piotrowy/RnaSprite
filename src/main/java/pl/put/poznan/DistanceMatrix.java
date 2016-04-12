@@ -88,9 +88,8 @@ public class DistanceMatrix extends Matrix {
                         AtomName.fromString(at2)))) + "" : "";
     }
 
-    public List<String> parseParamList(List<String> paramList){
+     public static List<String> parseParamList(List<String> paramList){
         return Collections.emptyList();
-
     }
 }
 
