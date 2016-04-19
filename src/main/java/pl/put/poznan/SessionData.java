@@ -10,24 +10,20 @@ public class SessionData {
     private StructureContainer structure;
     private Date lastUseTime;
 
-    public SessionData (StructureContainer structure, Date time) {
-        this.setStructure(structure);
-        this.setLastUseTime(time);
+    public SessionData (StructureContainer structure, Date lastUseTime) {
+        this.structure = structure;
+        this.lastUseTime = lastUseTime;
     }
 
     public StructureContainer getStructure() {
         return structure;
     }
 
-    public void setStructure(StructureContainer structure) {
-        this.structure = structure;
-    }
-
     public Date getLastUseTime() {
         return lastUseTime;
     }
 
-    public void setLastUseTime(Date lastUseTime) {
+    public synchronized void setLastUseTime(Date lastUseTime) {
         this.lastUseTime = lastUseTime;
     }
 }

@@ -22,16 +22,12 @@ public class AppControllerTest {
 
     @Test
     public void testGetAnglesFromPDBEmptyPDBId() {
-        appController.getAnglesFromPDB("");
+        appController.getTorsionAngles("");
     }
 
     @Test
     public void testGetAnglesFromPDBInvalidPDBId() {
-        appController.getAnglesFromPDB("qwerty");
+        appController.getTorsionAngles("qwerty");
     }
 
-    @Test
-    public void testGetAnglesFromFileProtein() throws IOException {
-        assertNotNull(appController.getAnglesFromFile(pdb1KTR, null));
-    }
 }

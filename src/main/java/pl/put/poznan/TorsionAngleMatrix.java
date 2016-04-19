@@ -129,6 +129,10 @@ public class TorsionAngleMatrix extends Matrix{
         return aNames;
     }
 
+    public static TorsionAngleMatrix emptyMatrix(){
+        return new TorsionAngleMatrix();
+    }
+
     /**
      * @return the angleNames
      */

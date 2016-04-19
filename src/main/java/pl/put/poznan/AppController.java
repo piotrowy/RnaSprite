@@ -12,13 +12,16 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONObject;
 
+import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 
@@ -30,43 +33,44 @@ import java.util.concurrent.TimeUnit;
 public class AppController {
 
 	final static Logger logger = Logger.getLogger(AppController.class);
-	private Map<UUID, SessionData> sessionMap;
+	private Map<UUID, SessionData> sessionMap = SessionHolder.takeInstance().getSessionMap();
+	private static String FAILURE_MESSAGE = "Something went wrong!";
+	private static String SUCCSES_MESSAGE = "SUCCSES";
 
 	public AppController () {
-		this.sessionMap = new HashMap<>();
+		/*this.sessionMap = new ConcurrentHashMap<>();;
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 Date d = new Date();
                 sessionMap.entrySet().stream().filter(map -> TimeUnit.MILLISECONDS.toMinutes(
-                        d.getTime() - map.getValue().getLastUseTime().getTime()) <= 30).forEach(
+                        d.getTime() - map.getValue().getLastUseTime().getTime()) >= 30).forEach(
                         map -> sessionMap.remove(map.getKey()));
             }
         };
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 60000);
+        timer.scheduleAtFixedRate(timerTask, 0, 60000);*/
 	}
 
 	@GET
 	@Path("upload-structure-pdbid")
 	@Produces(MediaType.APPLICATION_JSON)
-	public JSONObject uploadStructure (@QueryParam("structurePDB") String structurePDB) {
-		String id = generateSessionData(new StructureContainer(structurePDB));
-		JSONObject resultJSON = new JSONObject();
-        resultJSON.put("id", id);
-		return resultJSON;
+	public Object uploadStructure (@QueryParam("structurePDB") String structurePDB) {
+		if (!structurePDB.equals("")) {
+			String id = generateSessionData(new StructureContainer(structurePDB));
+			return Response.status(200).entity(id).type("Application/json").build();
+		}
+		return Response.status(404).entity(FAILURE_MESSAGE).type("Application/json").build();
 	}
 
 	@POST
 	@Path("upload-structure-file")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.TEXT_HTML)
-	public JSONObject uploadStructure(@FormDataParam("modelFile") InputStream uploadedInputStream,
+	public Object uploadStructure(@FormDataParam("modelFile") InputStream uploadedInputStream,
                                       @FormDataParam("modelFile") FormDataContentDisposition fileDetail) {
         File uploadedFileLocation = null;
         FileOutputStream outputStream = null;
-        String failMessage = "Server failed: ";
-        JSONObject resultJSON = new JSONObject();
 
         try {
             uploadedFileLocation = File.createTempFile("RNAsprite", ".pdb");
@@ -76,23 +80,21 @@ public class AppController {
             logger.info(output);
             String id = generateSessionData(new StructureContainer(
                     uploadedFileLocation));
-            resultJSON.put("id", id);
-            return resultJSON;
+            return Response.status(200).entity(id).type("Application/json").build();
         } catch (IOException  ex) {
             logger.warn(ex);
-            failMessage += ex;
+            FAILURE_MESSAGE += ex;
         } finally {
             FileUtils.deleteQuietly(uploadedFileLocation);
             IOUtils.closeQuietly(outputStream);
         }
-        resultJSON.put("Message", failMessage);
-        return resultJSON;
+        return Response.status(404).entity(FAILURE_MESSAGE).type("Application/json").build();
 	}
 
 	private String generateSessionData(StructureContainer structure){
-		String id = UUID.randomUUID().toString();
-		this.sessionMap.put(UUID.fromString(id), new SessionData(structure, new Date()));
-		return id;
+		UUID id = UUID.randomUUID();
+		this.sessionMap.put(id, new SessionData(structure, new Date()));
+		return id.toString();
 	}
 
 	@GET
@@ -138,12 +140,15 @@ public class AppController {
 	}
 
 	@GET
-	@Path("downloadTorsionAngles")
+	@Path("torsion-angles")
 	@Produces(MediaType.APPLICATION_JSON)
-	public TorsionAngleMatrix getAnglesFromPDB(
+	public TorsionAngleMatrix getTorsionAngles(
 			@QueryParam("sessionId") String sessionId) {
         this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
-		return new TorsionAngleMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure());
+		if(!sessionId.equals("")) {
+			return new TorsionAngleMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure());
+		}
+		return TorsionAngleMatrix.emptyMatrix();
 	}
 
 	@GET
