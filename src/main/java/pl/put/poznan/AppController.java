@@ -10,9 +10,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.json.JSONObject;
 
-import javax.inject.Singleton;
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,9 +19,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
 
 
 /**
@@ -34,7 +35,7 @@ public class AppController {
 
 	final static Logger logger = Logger.getLogger(AppController.class);
 	private Map<UUID, SessionData> sessionMap = SessionHolder.takeInstance().getSessionMap();
-	private static String FAILURE_MESSAGE = "Something went wrong!";
+	private static String FAILURE_MESSAGE = "Entity not found for UUID: ";
 	private static String SUCCSES_MESSAGE = "SUCCSES";
 
 	public AppController () {
@@ -55,19 +56,19 @@ public class AppController {
 	@GET
 	@Path("upload-structure-pdbid")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Object uploadStructure (@QueryParam("structurePDB") String structurePDB) {
+	public Response uploadStructure (@QueryParam("structurePDB") String structurePDB) {
 		if (!structurePDB.equals("")) {
 			String id = generateSessionData(new StructureContainer(structurePDB));
-			return Response.status(200).entity(id).type("Application/json").build();
+			return Response.ok(id, MediaType.APPLICATION_JSON).build();
 		}
-		return Response.status(404).entity(FAILURE_MESSAGE).type("Application/json").build();
+		return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + structurePDB).type("Application/json").build();
 	}
 
 	@POST
 	@Path("upload-structure-file")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.TEXT_HTML)
-	public Object uploadStructure(@FormDataParam("modelFile") InputStream uploadedInputStream,
+	public Response uploadStructure(@FormDataParam("modelFile") InputStream uploadedInputStream,
                                       @FormDataParam("modelFile") FormDataContentDisposition fileDetail) {
         File uploadedFileLocation = null;
         FileOutputStream outputStream = null;
@@ -97,58 +98,73 @@ public class AppController {
 		return id.toString();
 	}
 
+    private Response checkSessionIdAndCallFunc(String sessionId, Function<String, Response> func){
+        if (!sessionId.equals("") && this.sessionMap.containsKey(UUID.fromString(sessionId))) {
+            return func.apply(sessionId);
+        }
+        return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + sessionId).build();
+    }
+
 	@GET
 	@Path("atoms-list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public AtomNamesList getAnglesList() {
-		return new AtomNamesList();
-	}
+	public Response getAnglesList() {
+        return Response.ok(new AtomNamesList(), MediaType.APPLICATION_JSON).build();
+    }
+
 
 	@GET
 	@Path("chain-list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ChainsIdList getChainsList(
+	public Response getChainsList(
 			@QueryParam("sessionId") String sessionId) {
-        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
-		return new ChainsIdList(this.sessionMap.get(UUID.fromString(sessionId)).getStructure());
+        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new ChainsIdList(this.sessionMap.get(UUID.fromString(s)).getStructure()),
+                    MediaType.APPLICATION_JSON).build();
+        });
 	}
 
 	@GET
 	@Path("distance-matrix")
 	@Produces(MediaType.APPLICATION_JSON)
-	public DistanceMatrix getDistanceMatrix(
+	public Response getDistanceMatrix(
 			@QueryParam("sessionId") String sessionId,
 			@QueryParam("chain") String chain,
 			@QueryParam("at1") String at1,
 			@QueryParam("at2") String at2) {
-        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
-		return new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(), chain, at1, at2);
+        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
+                    chain, at1, at2), MediaType.APPLICATION_JSON).build();
+        });
 	}
 
 	@GET
 	@Path("distance-matrix-fg")
 	@Produces(MediaType.APPLICATION_JSON)
-	public DistanceMatrix getFragmentOfDistanceMatrix(
+	public Response getFragmentOfDistanceMatrix(
 			@QueryParam("sessionId") String sessionId,
 			@QueryParam("fragmentsDefinition") List<String> fragmentsDefinition,
 			@QueryParam("paramList") List<String> paramList,
 			@QueryParam("at1") String at1,
 			@QueryParam("at2") String at2) {
-        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
-        return new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
-                paramList, at1, at2);
+        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
+                    paramList, at1, at2), MediaType.APPLICATION_JSON).build();
+        });
 	}
 
 	@GET
 	@Path("torsion-angles")
 	@Produces(MediaType.APPLICATION_JSON)
-	public TorsionAngleMatrix getTorsionAngles(
-			@QueryParam("sessionId") String sessionId) {
-        this.sessionMap.get(UUID.fromString(sessionId)).setLastUseTime(new Date());
-		if(!sessionId.equals("")) {
-			return new TorsionAngleMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure());
-		}
-		return TorsionAngleMatrix.emptyMatrix();
+	public Response getTorsionAngles(@QueryParam("sessionId") String sessionId) {
+        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new TorsionAngleMatrix(this.sessionMap.get(UUID.fromString(s)).getStructure()),
+                    MediaType.APPLICATION_JSON).build();
+        });
 	}
 
 	@GET

@@ -13,7 +13,7 @@ public class SessionHolder {
     private Map<UUID, SessionData> sessionMap;
 
     private SessionHolder(){
-        this.sessionMap = new HashMap<>();;
+        this.sessionMap = new ConcurrentHashMap<>();;
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {

@@ -23,7 +23,7 @@ public class SessionData {
         return lastUseTime;
     }
 
-    public synchronized void setLastUseTime(Date lastUseTime) {
+    public void setLastUseTime(Date lastUseTime) {
         this.lastUseTime = lastUseTime;
     }
 }
