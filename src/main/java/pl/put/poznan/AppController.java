@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 /**
@@ -57,12 +58,11 @@ public class AppController {
 	@Path("upload-structure-pdbid")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadStructure (@QueryParam("structurePDB") String structurePDB) {
-		if (!structurePDB.equals("")) {
-			String id = generateSessionData(new StructureContainer(structurePDB));
-			return Response.ok(id, MediaType.APPLICATION_JSON).build();
-		}
-		return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + structurePDB).type("Application/json").build();
-	}
+        return checkStructurePdbIdAndCallFunc(structurePDB, (s) -> {
+            String id = generateSessionData(new StructureContainer(s));
+            return Response.ok(id, MediaType.APPLICATION_JSON).build();
+        });
+    }
 
 	@POST
 	@Path("upload-structure-file")
@@ -99,10 +99,19 @@ public class AppController {
 	}
 
     private Response checkSessionIdAndCallFunc(String sessionId, Function<String, Response> func){
-        if (!sessionId.equals("") && this.sessionMap.containsKey(UUID.fromString(sessionId))) {
-            return func.apply(sessionId);
+        return checkParametersAndCallFunc(sessionId, (s) -> !s.equals("") &&
+                this.sessionMap.containsKey(UUID.fromString(s.toString())), func);
+    }
+
+    private Response checkStructurePdbIdAndCallFunc(String pdbId, Function<String, Response> func) {
+        return checkParametersAndCallFunc(pdbId, (s) -> !s.equals("") && s.toString().length() == 4, func);
+    }
+
+    private Response checkParametersAndCallFunc(String param, Predicate pred, Function<String, Response> func) {
+        if (pred.test(param)){
+            return func.apply(param);
         }
-        return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + sessionId).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + param).build();
     }
 
 	@GET
