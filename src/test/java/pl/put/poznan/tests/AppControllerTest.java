@@ -9,9 +9,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Created by tzok on 01.03.16.
  * Edited by piotrowy on 28.04.16.
