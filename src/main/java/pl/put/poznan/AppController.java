@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.JSONObject;
 
 import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
@@ -19,10 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -39,29 +37,35 @@ public class AppController {
 	private static String FAILURE_MESSAGE = "Entity not found for UUID: ";
 	private static String SUCCSES_MESSAGE = "SUCCSES";
 
-	public AppController () {
-		/*this.sessionMap = new ConcurrentHashMap<>();;
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                Date d = new Date();
-                sessionMap.entrySet().stream().filter(map -> TimeUnit.MILLISECONDS.toMinutes(
-                        d.getTime() - map.getValue().getLastUseTime().getTime()) >= 30).forEach(
-                        map -> sessionMap.remove(map.getKey()));
-            }
-        };
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 60000);*/
-	}
+    private String generateSessionData(StructureContainer structure){
+        UUID id = UUID.randomUUID();
+        this.sessionMap.put(id, new SessionData(structure, new Date()));
+        return id.toString();
+    }
+
+    private Response checkSessionIdAndGetResponse(String sessionId, Function<String, Response> func){
+        return getResponse(sessionId, (s) -> !s.equals("") &&
+                this.sessionMap.containsKey(UUID.fromString(s.toString())), func);
+    }
+
+    private Response checkPdbIdAndGetResponse(String pdbId, Function<String, Response> func) {
+        return getResponse(pdbId, (s) -> !s.equals("") && s.toString().length() == 4 && StructureContainer.
+                isPdbIdExists((String)s, SessionHolder.takeInstance().getPdbSet()) == true, func);
+    }
+
+    private Response getResponse(String param, Predicate pred, Function<String, Response> func) {
+        if (pred.test(param)){
+            return func.apply(param);
+        }
+        return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + param).build();
+    }
 
 	@GET
 	@Path("upload-structure-pdbid")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadStructure (@QueryParam("structurePDB") String structurePDB) {
-        return checkStructurePdbIdAndCallFunc(structurePDB, (s) -> {
-            String id = generateSessionData(new StructureContainer(s));
-            return Response.ok(id, MediaType.APPLICATION_JSON).build();
-        });
+        return checkPdbIdAndGetResponse(structurePDB.toUpperCase(), (s) -> Response.ok(generateSessionData(new StructureContainer(s)),
+                MediaType.APPLICATION_JSON).build());
     }
 
 	@POST
@@ -82,37 +86,14 @@ public class AppController {
             String id = generateSessionData(new StructureContainer(
                     uploadedFileLocation));
             return Response.status(200).entity(id).type("Application/json").build();
-        } catch (IOException  ex) {
+        } catch (Exception  ex) {
             logger.warn(ex);
-            FAILURE_MESSAGE += ex;
         } finally {
             FileUtils.deleteQuietly(uploadedFileLocation);
             IOUtils.closeQuietly(outputStream);
         }
         return Response.status(404).entity(FAILURE_MESSAGE).type("Application/json").build();
 	}
-
-	private String generateSessionData(StructureContainer structure){
-		UUID id = UUID.randomUUID();
-		this.sessionMap.put(id, new SessionData(structure, new Date()));
-		return id.toString();
-	}
-
-    private Response checkSessionIdAndCallFunc(String sessionId, Function<String, Response> func){
-        return checkParametersAndCallFunc(sessionId, (s) -> !s.equals("") &&
-                this.sessionMap.containsKey(UUID.fromString(s.toString())), func);
-    }
-
-    private Response checkStructurePdbIdAndCallFunc(String pdbId, Function<String, Response> func) {
-        return checkParametersAndCallFunc(pdbId, (s) -> !s.equals("") && s.toString().length() == 4, func);
-    }
-
-    private Response checkParametersAndCallFunc(String param, Predicate pred, Function<String, Response> func) {
-        if (pred.test(param)){
-            return func.apply(param);
-        }
-        return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + param).build();
-    }
 
 	@GET
 	@Path("atoms-list")
@@ -127,7 +108,7 @@ public class AppController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getChainsList(
 			@QueryParam("sessionId") String sessionId) {
-        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+        return checkSessionIdAndGetResponse(sessionId, (s) -> {
             this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
             return Response.ok(new ChainsIdList(this.sessionMap.get(UUID.fromString(s)).getStructure()),
                     MediaType.APPLICATION_JSON).build();
@@ -142,7 +123,7 @@ public class AppController {
 			@QueryParam("chain") String chain,
 			@QueryParam("at1") String at1,
 			@QueryParam("at2") String at2) {
-        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+        return checkSessionIdAndGetResponse(sessionId, (s) -> {
             this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
             return Response.ok(new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
                     chain, at1, at2), MediaType.APPLICATION_JSON).build();
@@ -158,7 +139,7 @@ public class AppController {
 			@QueryParam("paramList") List<String> paramList,
 			@QueryParam("at1") String at1,
 			@QueryParam("at2") String at2) {
-        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+        return checkSessionIdAndGetResponse(sessionId, (s) -> {
             this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
             return Response.ok(new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
                     paramList, at1, at2), MediaType.APPLICATION_JSON).build();
@@ -169,7 +150,7 @@ public class AppController {
 	@Path("torsion-angles")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTorsionAngles(@QueryParam("sessionId") String sessionId) {
-        return checkSessionIdAndCallFunc(sessionId, (s) -> {
+        return checkSessionIdAndGetResponse(sessionId, (s) -> {
             this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
             return Response.ok(new TorsionAngleMatrix(this.sessionMap.get(UUID.fromString(s)).getStructure()),
                     MediaType.APPLICATION_JSON).build();

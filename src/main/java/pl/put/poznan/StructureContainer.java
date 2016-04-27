@@ -5,20 +5,19 @@
  */
 package pl.put.poznan;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-
-import java.util.List;
-import java.util.Map;
-import javax.ws.rs.core.Response;
-
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import pl.poznan.put.constant.Unicode;
-
 import pl.poznan.put.pdb.PdbParsingException;
 import pl.poznan.put.pdb.analysis.PdbModel;
 import pl.poznan.put.structure.tertiary.StructureManager;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  *
@@ -34,8 +33,9 @@ public class StructureContainer {
     }
 
     private List<PdbModel> structureList;
-    private Response respIfNull;
     private static Map<String, String> greekAnglesNames = fillGreekAnglesNames();
+    private static final String USER_AGENT = "Mozilla/5.0";
+
 
     final private static Logger logger = Logger.getLogger(StructureContainer.class);
 
@@ -46,11 +46,8 @@ public class StructureContainer {
     public StructureContainer(String pdbId) {
         try {
             structureList = StructureManager.loadStructure(pdbId);
-            respIfNull = null;
-        } catch (IOException | PdbParsingException ex) {
-            String failureMessage = "Nie znaleziono podanej nazwy w bazie.";
-            respIfNull = Response.status(Response.Status.BAD_REQUEST).entity(failureMessage + '\n' + ex).build();
-            logger.warn(ex);
+        } catch (Exception ex) {
+            structureList = Collections.EMPTY_LIST;
         }
     }
 
@@ -58,15 +55,29 @@ public class StructureContainer {
      *
      * @param pdbFile - file or archive with model/s
      */
-    public StructureContainer(File pdbFile) {
-        try {
+    public StructureContainer(File pdbFile) throws IOException, PdbParsingException {
             structureList = StructureManager.loadStructure(pdbFile);
-            respIfNull = null;
-        } catch (IOException | PdbParsingException ex) {
-            String failureMessage = "Nieprawidłowy plik PDB.";
-            respIfNull = Response.status(Response.Status.BAD_REQUEST).entity(failureMessage + '\n' + ex).build();
-            logger.warn(ex);
+    }
+
+    public static Boolean isPdbIdExists(String pdbId, Set<String> pdbSet) {
+        return pdbSet.contains(pdbId.toUpperCase());
+    }
+
+    public static Set<String> currentPdbIds() {
+        try {
+            Set<String> pdbSet = new HashSet<>();
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse("http://www.rcsb.org/pdb/rest/getCurrent");
+            NodeList currentIds = doc.getElementsByTagName("PDB");
+            for (int i = 0; i < currentIds.getLength(); i++) {
+                pdbSet.add(currentIds.item(i).getAttributes().getNamedItem("structureId").getNodeValue());
+            }
+            return pdbSet;
+        } catch (Exception ex) {
+            logger.error(ex);
         }
+        return Collections.EMPTY_SET;
     }
 
     private static Map<String, String> fillGreekAnglesNames() {
@@ -92,13 +103,6 @@ public class StructureContainer {
     }
 
     /**
-     * @return the respIfNull
-     */
-    public Response getRespIfNull() {
-        return respIfNull;
-    }
-
-    /**
      * @return the structureList
      */
     public List<PdbModel> getStructureList() {
@@ -112,10 +116,4 @@ public class StructureContainer {
         this.structureList = structureList;
     }
 
-    /**
-     * @param respIfNull the respIfNull to set
-     */
-    public void setRespIfNull(Response respIfNull) {
-        this.respIfNull = respIfNull;
-    }
 }
