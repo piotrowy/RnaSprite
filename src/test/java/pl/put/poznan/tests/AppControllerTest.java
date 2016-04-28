@@ -49,6 +49,12 @@ public class AppControllerTest {
         Assert.assertEquals("Status code must be 200", 200, response.getStatus());
     }
 
+    @Test
+    public void testGetAnglesList() {
+        Response response = appController.getAnglesList();
+        Assert.assertEquals("Status code must be 200", 200, response.getStatus());
+    }
+
 
 //    @Test
 //    public void testGetAnglesFromFileProtein() throws IOException {
