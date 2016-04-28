@@ -55,6 +55,12 @@ public class AppControllerTest {
         Assert.assertEquals("Status code must be 200", 200, response.getStatus());
     }
 
+    @Test
+    public void testGetTorsionAngles() {
+        Response response = appController.uploadStructure("1EHZ");
+        response = appController.getTorsionAngles(response.getEntity().toString());
+        Assert.assertEquals("Status code must be 200", 200, response.getStatus());
+    }
 
 //    @Test
 //    public void testGetAnglesFromFileProtein() throws IOException {
