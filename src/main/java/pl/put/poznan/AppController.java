@@ -31,7 +31,7 @@ public class AppController {
 
 	final static Logger logger = Logger.getLogger(AppController.class);
 
-    public final static Properties properties = new Properties();
+    public final static ProjectProperties config = new ProjectProperties();
 
     private Map<UUID, SessionData> sessionMap = SessionHolder.takeInstance().getSessionMap();
 	private static String FAILURE_MESSAGE = "Entity not found for data: ";

@@ -30,10 +30,10 @@ import javax.mail.internet.MimeMultipart;
  */
 public class Mail {
 
-	private static final String SEND_FROM = "rnasprite@gmail.com";
-	private static final String USERNAME = "RnaSprite";
-	private static final String PASSWORD = "Ryb0s0my";
-	private static final String HOST = "smtp.gmail.com";
+	private static final String SEND_FROM = AppController.config.getProperties().getProperty("mail.mail");
+	private static final String USERNAME = AppController.config.getProperties().getProperty("mail.username");
+	private static final String PASSWORD = AppController.config.getProperties().getProperty("mail.password");
+	private static final String HOST = AppController.config.getProperties().getProperty("mail.host");
 	private String sendTo;
 	private String file;
 
@@ -52,7 +52,7 @@ public class Mail {
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.host", HOST);
-		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.port", AppController.config.getProperties().getProperty("mail.port"));
 		properties.put("mail.smtp.socketFactory.class",
 				"javax.net.ssl.SSLSocketFactory");
 

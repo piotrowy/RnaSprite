@@ -1,0 +1,10 @@
+mail.host=
+mail.username=
+mail.mail=
+mail.password=
+mail.port=
+
+timertask.currentPdbIdList.timeInterval=
+timertask.currentPdbIdList.timeDelay=
+timertask.sessionMap.timeInterval=
+timertask.sessionMap.timeDelay=

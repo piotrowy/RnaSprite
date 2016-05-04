@@ -32,8 +32,12 @@ public class SessionHolder {
             }
         };
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask1, 0, 60000);
-        timer.scheduleAtFixedRate(timerTask2, 0, 3600000);
+        timer.scheduleAtFixedRate(timerTask1, Integer.parseInt(AppController.config.getProperties().
+                getProperty("timertask.sessionMap.timeDelay")), Integer.parseInt(AppController.config.getProperties().
+                getProperty("timertask.sessionMap.timeInterval")));
+        timer.scheduleAtFixedRate(timerTask2, Integer.parseInt(AppController.config.getProperties().
+                getProperty("timertask.currentPdbIdList.timeDelay")), Integer.parseInt(AppController.config.
+                getProperties().getProperty("timertask.currentPdbIdList.timeInterval")));
     }
 
     public static SessionHolder takeInstance(){
