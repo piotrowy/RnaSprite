@@ -8,6 +8,7 @@ import pl.put.poznan.AppController;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * Created by tzok on 01.03.16.
@@ -46,21 +47,36 @@ public class AppControllerTest {
         String pattern = "[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}";
         Response response = appController.uploadStructure("1EHZ");
         Assert.assertTrue(response.getEntity().toString().matches(pattern));
+        Assert.assertTrue(appController.getSessionMap().containsKey(UUID.fromString(response.getEntity().toString())));
         Assert.assertEquals("Status code must be 200", 200, response.getStatus());
     }
 
     @Test
-    public void testGetAnglesList() {
-        Response response = appController.getAnglesList();
+    public void testGetAtomsList() {
+        Response response = appController.getAtomsList();
         Assert.assertEquals("Status code must be 200", 200, response.getStatus());
     }
 
     @Test
-    public void testGetTorsionAngles() {
-        Response response = appController.uploadStructure("1EHZ");
-        response = appController.getTorsionAngles(response.getEntity().toString());
+    public void testGetTorsionAnglesInvalidSessionId() {
+        Response response = appController.getTorsionAngles("11111111-1111-1111-1111-111111111111");
+        Assert.assertEquals("Status code must be 404", 404, response.getStatus());
+    }
+
+    @Test
+    public void testGetTorsionAnglesEmptySessionId() {
+        Response response = appController.getTorsionAngles("");
+        Assert.assertEquals("Status code must be 404", 404, response.getStatus());
+    }
+
+    @Test
+    public void testGetTorsionAnglesValidSessionId() {
+        Response sessionId = appController.uploadStructure("1EHZ");
+        Response response = appController.getTorsionAngles(sessionId.getEntity().toString());
         Assert.assertEquals("Status code must be 200", 200, response.getStatus());
     }
+
+
 
 //    @Test
 //    public void testGetAnglesFromFileProtein() throws IOException {

@@ -1,6 +1,8 @@
+src/main/resources/config.properties
 target
 .idea
 .settings
 .project
 *.iml
 .DS_Store
+./src/main/resources/config.properties

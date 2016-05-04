@@ -17,10 +17,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -33,8 +30,11 @@ import java.util.function.Predicate;
 public class AppController {
 
 	final static Logger logger = Logger.getLogger(AppController.class);
-	private Map<UUID, SessionData> sessionMap = SessionHolder.takeInstance().getSessionMap();
-	private static String FAILURE_MESSAGE = "Entity not found for UUID: ";
+
+    public final static Properties properties = new Properties();
+
+    private Map<UUID, SessionData> sessionMap = SessionHolder.takeInstance().getSessionMap();
+	private static String FAILURE_MESSAGE = "Entity not found for data: ";
 	private static String SUCCSES_MESSAGE = "SUCCSES";
 
     private String generateSessionData(StructureContainer structure){
@@ -58,6 +58,10 @@ public class AppController {
             return func.apply(param);
         }
         return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + param).build();
+    }
+
+    public Map<UUID, SessionData> getSessionMap() {
+        return sessionMap;
     }
 
 	@GET
@@ -98,7 +102,7 @@ public class AppController {
 	@GET
 	@Path("atoms-list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAnglesList() {
+	public Response getAtomsList() {
         return Response.ok(new AtomNamesList(), MediaType.APPLICATION_JSON).build();
     }
 
