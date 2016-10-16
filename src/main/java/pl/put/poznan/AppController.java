@@ -1,4 +1,3 @@
-
 package pl.put.poznan;
 
 import lombok.Getter;
@@ -33,17 +32,37 @@ import java.util.function.Predicate;
 @Path("/options")
 public class AppController {
 
+    /**
+     * parameter which serves to validate proper length of pdb id.
+     */
     private static final int PDB_ID_LENGTH = 4;
+
+    /**
+     * logger to log sth.
+     */
     private static final Logger LOGGER = Logger.getLogger(AppController.class);
+
+    /**
+     * failure message is sent when application can not do computations with given input.
+     */
     private static final String FAILURE_MESSAGE = "Entity not found for data: ";
-    public static ConfigService config;
 
+    /**
+     * config stores every important param from config.properties file.
+     */
     @Getter
-    private Map<UUID, SessionData> sessionMap;
+    private static ConfigService config;
 
+    /**
+     *
+     * @throws IOException because ConfigService reads properties from file.
+     */
     public AppController() throws IOException {
-        this.config = new ConfigService();
-        this.sessionMap = SessionHolder.getInstance().getSessionMap();
+        config = new ConfigService();
+    }
+
+    public static final Map<UUID, SessionData> getSessionMap() {
+        return SessionHolder.getInstance().getSessionMap();
     }
 
     /**
@@ -52,7 +71,7 @@ public class AppController {
      */
     private String generateSessionData(final StructureContainer structure) {
         UUID id = UUID.randomUUID();
-        this.sessionMap.put(id, new SessionData(structure, new Date()));
+        getSessionMap().put(id, new SessionData(structure, new Date()));
         return id.toString();
     }
 
@@ -63,7 +82,7 @@ public class AppController {
      */
     private Response checkSessionIdAndGetResponse(final String sessionId, Function<String, Response> func) {
         return getResponse(sessionId, (s) -> !s.equals("")
-                && this.sessionMap.containsKey(UUID.fromString(s.toString())), func);
+                && AppController.getSessionMap().containsKey(UUID.fromString(s.toString())), func);
     }
 
     private Response checkPdbIdAndGetResponse(String pdbId, Function<String, Response> func) {
@@ -124,8 +143,8 @@ public class AppController {
     public final Response getChainsList(
             @QueryParam("sessionId") final String sessionId) {
         return checkSessionIdAndGetResponse(sessionId, (s) -> {
-            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
-            return Response.ok(new ChainsIdList(this.sessionMap.get(UUID.fromString(s)).getStructure()),
+            AppController.getSessionMap().get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new ChainsIdList(AppController.getSessionMap().get(UUID.fromString(s)).getStructure()),
                     MediaType.APPLICATION_JSON).build();
         });
     }
@@ -139,8 +158,9 @@ public class AppController {
             @QueryParam("at1") final String at1,
             @QueryParam("at2") final String at2) {
         return checkSessionIdAndGetResponse(sessionId, (s) -> {
-            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
-            return Response.ok(new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
+            AppController.getSessionMap().get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new DistanceMatrix(
+                    AppController.getSessionMap().get(UUID.fromString(sessionId)).getStructure(),
                     chain, at1, at2), MediaType.APPLICATION_JSON).build();
         });
     }
@@ -155,9 +175,10 @@ public class AppController {
             @QueryParam("at1") final String at1,
             @QueryParam("at2") final String at2) {
         return checkSessionIdAndGetResponse(sessionId, (s) -> {
-            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
-            return Response.ok(new DistanceMatrix(this.sessionMap.get(UUID.fromString(sessionId)).getStructure(),
-                    paramList, at1, at2), MediaType.APPLICATION_JSON).build();
+            AppController.getSessionMap().get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new DistanceMatrix(AppController.getSessionMap().get(
+                    UUID.fromString(sessionId)).getStructure(), paramList, at1, at2),
+                    MediaType.APPLICATION_JSON).build();
         });
     }
 
@@ -166,8 +187,9 @@ public class AppController {
     @Produces(MediaType.APPLICATION_JSON)
     public final Response getTorsionAngles(@QueryParam("sessionId") final String sessionId) {
         return checkSessionIdAndGetResponse(sessionId, (s) -> {
-            this.sessionMap.get(UUID.fromString(s)).setLastUseTime(new Date());
-            return Response.ok(new TorsionAngleMatrix(this.sessionMap.get(UUID.fromString(s)).getStructure()),
+            AppController.getSessionMap().get(UUID.fromString(s)).setLastUseTime(new Date());
+            return Response.ok(new TorsionAngleMatrix(
+                    AppController.getSessionMap().get(UUID.fromString(s)).getStructure()),
                     MediaType.APPLICATION_JSON).build();
         });
     }

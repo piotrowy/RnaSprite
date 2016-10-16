@@ -50,7 +50,7 @@ public final class PdbIdContainer {
             Set<String> pdbSet = new HashSet<>();
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(AppController.config.currentPdbListUrl());
+            Document doc = dBuilder.parse(AppController.getConfig().currentPdbListUrl());
             NodeList currentIds = doc.getElementsByTagName("PDB");
             for (int i = 0; i < currentIds.getLength(); i++) {
                 pdbSet.add(currentIds.item(i).getAttributes().getNamedItem("structureId").getNodeValue());
@@ -71,7 +71,7 @@ public final class PdbIdContainer {
             Set<String> pdbSet = new HashSet<>();
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(AppController.config.obsoletePdbListUrl());
+            Document doc = dBuilder.parse(AppController.getConfig().obsoletePdbListUrl());
             NodeList obsoleteIds = doc.getElementsByTagName("PDB");
             for (int i = 0; i < obsoleteIds.getLength(); i++) {
                 pdbSet.add(obsoleteIds.item(i).getAttributes().getNamedItem("structureId").getNodeValue());
