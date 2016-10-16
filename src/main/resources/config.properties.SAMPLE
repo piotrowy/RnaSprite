@@ -8,3 +8,6 @@ timertask.currentPdbIdList.timeInterval=
 timertask.currentPdbIdList.timeDelay=
 timertask.sessionMap.timeInterval=
 timertask.sessionMap.timeDelay=
+
+currentPdbIds=http://www.rcsb.org/pdb/rest/getCurrent
+obsoletePdbIds=http://www.rcsb.org/pdb/rest/getObsolete

@@ -6,18 +6,17 @@
 package pl.put.poznan;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import pl.poznan.put.constant.Unicode;
 import pl.poznan.put.pdb.PdbParsingException;
 import pl.poznan.put.pdb.analysis.PdbModel;
 import pl.poznan.put.structure.tertiary.StructureManager;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -26,22 +25,22 @@ import java.util.*;
 public class StructureContainer {
 
     /**
-     * @return the greekAnglesNames
+     * @return list of angle's greek names.
      */
     public static Map<String, String> getGreekAnglesNames() {
         return greekAnglesNames;
     }
 
-    private List<PdbModel> structureList;
     private static Map<String, String> greekAnglesNames = fillGreekAnglesNames();
     private static final String USER_AGENT = "Mozilla/5.0";
+    private List<PdbModel> structureList;
 
 
-    final private static Logger logger = Logger.getLogger(StructureContainer.class);
+    final private static Logger LOGGER = Logger.getLogger(StructureContainer.class);
 
     /**
      *
-     * @param pdbId - name of pdb model
+     * @param pdbId - name of pdb model.
      */
     public StructureContainer(String pdbId) {
         try {
@@ -57,27 +56,6 @@ public class StructureContainer {
      */
     public StructureContainer(File pdbFile) throws IOException, PdbParsingException {
             structureList = StructureManager.loadStructure(pdbFile);
-    }
-
-    public static Boolean isPdbIdExists(String pdbId, Set<String> pdbSet) {
-        return pdbSet.contains(pdbId.toUpperCase());
-    }
-
-    public static Set<String> currentPdbIds() {
-        try {
-            Set<String> pdbSet = new HashSet<>();
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse("http://www.rcsb.org/pdb/rest/getCurrent");
-            NodeList currentIds = doc.getElementsByTagName("PDB");
-            for (int i = 0; i < currentIds.getLength(); i++) {
-                pdbSet.add(currentIds.item(i).getAttributes().getNamedItem("structureId").getNodeValue());
-            }
-            return pdbSet;
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
-        return Collections.EMPTY_SET;
     }
 
     private static Map<String, String> fillGreekAnglesNames() {
@@ -103,7 +81,7 @@ public class StructureContainer {
     }
 
     /**
-     * @return the structureList
+     * @return
      */
     public List<PdbModel> getStructureList() {
         return structureList;

@@ -1,9 +1,9 @@
 package pl.put.poznan;
 
-import java.io.File;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -18,6 +18,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.File;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,21 +32,42 @@ import javax.mail.internet.MimeMultipart;
  *
  * @author piotrowy
  */
+@AllArgsConstructor
 public class Mail {
 
-	private static final String SEND_FROM = AppController.config.getProperties().getProperty("mail.mail");
-	private static final String USERNAME = AppController.config.getProperties().getProperty("mail.username");
-	private static final String PASSWORD = AppController.config.getProperties().getProperty("mail.password");
-	private static final String HOST = AppController.config.getProperties().getProperty("mail.host");
+	/**
+	 * application email address.
+	 */
+	private static final String SEND_FROM = AppController.config.email();
+
+	/**
+	 * application name.
+	 */
+	private static final String USERNAME = AppController.config.emailUsername();
+
+	/**
+	 * password to email.
+	 */
+	private static final String PASSWORD = AppController.config.emailPassword();
+
+	/**
+	 * host of email address.
+	 */
+	private static final String HOST = AppController.config.emailHost();
+
+	/**
+	 * email address at which charts are sent.
+	 */
+	@Getter @Setter @NonNull
 	private String sendTo;
+
+	/**
+	 * file with svg charts.
+	 */
+	@Getter @Setter @NonNull
 	private String file;
 
-	public Mail(String to, String file) {
-		this.setSendTo(to);
-		this.setFile(file);
-	}
-
-	public void sendMail(String subject, String body) {
+	public void sendMail(final String subject, final String body) {
 		sendMailWithAttachment(subject, body, false);
 	}
 
@@ -52,7 +77,7 @@ public class Mail {
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.host", HOST);
-		properties.put("mail.smtp.port", AppController.config.getProperties().getProperty("mail.port"));
+		properties.put("mail.smtp.port", AppController.config.emailPort());
 		properties.put("mail.smtp.socketFactory.class",
 				"javax.net.ssl.SSLSocketFactory");
 
@@ -105,20 +130,4 @@ public class Mail {
 	/*
 	 * TODO Dorobić obsługę inbox...
 	 */
-
-	public String getSendTo() {
-		return sendTo;
-	}
-
-	public void setSendTo(String sendTo) {
-		this.sendTo = sendTo;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
-	}
 }

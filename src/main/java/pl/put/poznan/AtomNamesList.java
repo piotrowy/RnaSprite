@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import lombok.Getter;
+import lombok.Setter;
 import pl.poznan.put.atom.AtomName;
 import pl.poznan.put.rna.Phosphate;
 import pl.poznan.put.rna.Ribose;
@@ -26,9 +29,17 @@ import pl.poznan.put.rna.base.Uracil;
 @XmlRootElement
 public class AtomNamesList {
 
-    private static List <String> staticList;
+    /**
+     * static list stores all atom names.
+     */
+    private static List<String> staticList;
+
+    /**
+     * plain list serves to serializing.
+     */
     @XmlElement
-    private List <String> list;
+    @Getter @Setter
+    private List<String> list;
 
     static {
         Set<AtomName> atomNames = new LinkedHashSet<>();
@@ -41,22 +52,11 @@ public class AtomNamesList {
         staticList = atomNames.stream().map(AtomName::getName).collect(Collectors.toList());
     }
 
-    public AtomNamesList(){
+    /**
+     * it constructs object to store all atom names.
+     */
+    public AtomNamesList() {
         this.list = staticList;
-    }
-    
-    /**
-     * @return the list
-     */
-    public List <String> getList() {
-        return list;
-    }
-
-    /**
-     * @param list the list to set
-     */
-    public void setList(List <String> list) {
-        this.list = list;
     }
 }
 

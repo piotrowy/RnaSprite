@@ -5,6 +5,7 @@
  */
 package pl.put.poznan;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import lombok.Getter;
+import lombok.Setter;
+
 
 /**
  *
@@ -24,12 +28,15 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 public class Row {
 
     @XmlElement
+    @Getter @Setter
     private List<String> row;
 
     @XmlElement
+    @Getter @Setter
     private int model;
 
     @XmlElement
+    @Getter @Setter
     private String chain;
 
     public Row() {
@@ -47,45 +54,5 @@ public class Row {
         this.chain = chain;
     }
 
-    /**
-     * @return the row
-     */
-    public List<String> getRow() {
-        return row;
-    }
 
-    /**
-     * @param row the row to set
-     */
-    public void setRow(List<String> row) {
-        this.row = row;
-    }
-
-    /**
-     * @return the model
-     */
-    public int getModel() {
-        return model;
-    }
-
-    /**
-     * @param model the model to set
-     */
-    public void setModel(int model) {
-        this.model = model;
-    }
-
-    /**
-     * @return the chain
-     */
-    public String getChain() {
-        return chain;
-    }
-
-    /**
-     * @param chain the chain to set
-     */
-    public void setChain(String chain) {
-        this.chain = chain;
-    }
 }

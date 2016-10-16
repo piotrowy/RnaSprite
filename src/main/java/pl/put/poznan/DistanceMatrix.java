@@ -6,10 +6,7 @@
 package pl.put.poznan;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -33,14 +30,13 @@ public class DistanceMatrix extends Matrix {
         super();
     }
 
-    public DistanceMatrix(StructureContainer strC, String chainIdentifier,
+    public DistanceMatrix(StructureContainer strC, String paramString,
                           String at1, String at2) {
-        this.matrix = this.generateDistanceMatrix(strC, chainIdentifier, at1, at2);
-    }
-
-    public DistanceMatrix(StructureContainer strC, List<String> paramList,
-                          String at1, String at2) {
-        this.matrix = this.generateFragmentOfDistanceMatrix(strC, paramList, at1, at2);
+        if (checkIfChainRequest(paramString)) {
+            this.matrix = this.generateDistanceMatrix(strC, paramString, at1, at2);
+        } else {
+            this.matrix = this.generateFragmentOfDistanceMatrix(strC, paramString, at1, at2);
+        }
     }
 
     public List<List<? extends Row>> generateDistanceMatrix(StructureContainer strC, String chainIdentifier, String at1, String at2) {
@@ -52,8 +48,9 @@ public class DistanceMatrix extends Matrix {
         }
     }
 
-    public List<List<? extends Row>> generateFragmentOfDistanceMatrix(StructureContainer strC, List<String> paramList, String at1, String at2){
-        if (!strC.getStructureList().isEmpty()) {
+    public List<List<? extends Row>> generateFragmentOfDistanceMatrix(StructureContainer strC, String paramString, String at1, String at2) {
+        if (!strC.getStructureList().isEmpty() && !paramString.equals("")) {
+            List<List<String>> paramList = DistanceMatrix.parseParamString(paramString);
             return Collections.emptyList();
         } else {
             return Collections.emptyList();
@@ -88,9 +85,12 @@ public class DistanceMatrix extends Matrix {
                         AtomName.fromString(at2)))) + "" : "";
     }
 
-     public static List<String> parseParamList(List<String> paramList){
-        return Collections.emptyList();
+    public static List<List<String>> parseParamString(String paramString) {
+        return Arrays.asList(paramString.split(";")).stream().map((s) -> Arrays.asList(s.split(",")))
+                .collect(Collectors.toList());
+    }
+
+    public static Boolean checkIfChainRequest(String param) {
+        return param.matches("([A-Za-z0-9]+,[A-Za-z0-9]+,[0-9]+;)*");
     }
 }
-
-

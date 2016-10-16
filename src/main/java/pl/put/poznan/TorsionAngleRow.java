@@ -5,6 +5,9 @@
  */
 package pl.put.poznan;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,12 +23,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class TorsionAngleRow extends Row{
     
     @XmlElement
+    @Getter @Setter
     private String pdbName;
 
     @XmlElement
+    @Getter @Setter
     private String symbol;
 
     @XmlElement
+    @Getter @Setter
     private String resNo;
     
     public TorsionAngleRow() {
@@ -45,47 +51,4 @@ public class TorsionAngleRow extends Row{
         this.symbol = symbol;
         this.resNo = resNo;
     }
-
-    /**
-     * @return the pdbName
-     */
-    public String getPdbName() {
-        return pdbName;
-    }
-
-    /**
-     * @param pdbName the pdbName to set
-     */
-    public void setPdbName(String pdbName) {
-        this.pdbName = pdbName;
-    }
-
-    /**
-     * @return the symbol
-     */
-    public String getSymbol() {
-        return symbol;
-    }
-
-    /**
-     * @param symbol the symbol to set
-     */
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    /**
-     * @return the resNo
-     */
-    public String getResNo() {
-        return resNo;
-    }
-
-    /**
-     * @param resNo the resNo to set
-     */
-    public void setResNo(String resNo) {
-        this.resNo = resNo;
-    }
-    
 }

@@ -76,10 +76,12 @@ public class AppControllerTest {
         Assert.assertEquals("Status code must be 200", 200, response.getStatus());
     }
 
-
-
-//    @Test
-//    public void testGetAnglesFromFileProtein() throws IOException {
-//        assertNotNull(appController.uploadStructure(pdb1KTR, null));
-//    }
+    @Test
+    public void testGetAnglesFromFileProtein() throws IOException {
+        String pattern = "[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}";
+        Response response = appController.uploadStructure(pdb1KTR, null);
+        Assert.assertTrue(response.getEntity().toString().matches(pattern));
+        Assert.assertTrue(appController.getSessionMap().containsKey(UUID.fromString(response.getEntity().toString())));
+        Assert.assertEquals("Status code must be 200", 200, response.getStatus());
+    }
 }

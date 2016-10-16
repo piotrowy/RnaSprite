@@ -5,6 +5,9 @@
  */
 package pl.put.poznan;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DistanceMatrixRow extends Row{
     
     @XmlElement
+    @Getter @Setter
     private String residue;
 
     public DistanceMatrixRow() {
@@ -34,20 +38,6 @@ public class DistanceMatrixRow extends Row{
 
     public DistanceMatrixRow(String residue, int model, String chain) {
         super(model, chain);
-        this.residue = residue;
-    }
-
-    /**
-     * @return the residuesList
-     */
-    public String getResidue() {
-        return residue;
-    }
-
-    /**
-     * @param residue the residuesList to set
-     */
-    public void setResidue(String residue) {
         this.residue = residue;
     }
 }
