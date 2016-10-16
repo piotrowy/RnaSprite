@@ -106,7 +106,7 @@ public class AppController {
     }
 
     @POST
-    @Path("stuctureFile")
+    @Path("structureFile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_HTML)
     public final Response uploadStructure(@FormDataParam("modelFile") InputStream uploadedInputStream,

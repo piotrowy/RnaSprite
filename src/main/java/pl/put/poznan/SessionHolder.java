@@ -60,8 +60,8 @@ public final class SessionHolder {
                 Integer.parseInt(AppController.getConfig().sessionMapDelay()),
                 Integer.parseInt(AppController.getConfig().sessionMapInterval()));
         timer.scheduleAtFixedRate(timerTask2,
-                Integer.parseInt(AppController.getConfig().pdbIdListDelay()),
-                Integer.parseInt(AppController.getConfig().pdbIdListInterval()));
+                Integer.parseInt(AppController.getConfig().pdbIdsSetDelay()),
+                Integer.parseInt(AppController.getConfig().pdbIdsSetInterval()));
     }
 
     /**
