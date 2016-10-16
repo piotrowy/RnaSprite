@@ -4,10 +4,10 @@ mail.mail=
 mail.password=
 mail.port=
 
-timertask.currentPdbIdList.timeInterval=
-timertask.currentPdbIdList.timeDelay=
-timertask.sessionMap.timeInterval=
-timertask.sessionMap.timeDelay=
+timerTask.currentPdbIdList.timeInterval=
+timerTask.currentPdbIdList.timeDelay=
+timerTask.sessionMap.timeInterval=
+timerTask.sessionMap.timeDelay=
 
 currentPdbIds=http://www.rcsb.org/pdb/rest/getCurrent
 obsoletePdbIds=http://www.rcsb.org/pdb/rest/getObsolete

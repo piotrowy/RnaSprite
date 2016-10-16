@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import lombok.Setter;
 import pl.poznan.put.pdb.analysis.PdbChain;
 import pl.poznan.put.pdb.analysis.PdbModel;
 
@@ -20,7 +22,11 @@ import pl.poznan.put.pdb.analysis.PdbModel;
 @XmlRootElement
 public class ChainsIdList {
 
+    /**
+     * List of chain id names.
+     */
     @XmlElement
+    @Setter
     private List <String> list;
     
     public ChainsIdList() {
@@ -44,12 +50,4 @@ public class ChainsIdList {
     public List <String> getList() {
         return Collections.unmodifiableList(list);
     }
-
-    /**
-     * @param list the list to set
-     */
-    public void setList(List <String> list) {
-        this.list = list;
-    }
-    
 }

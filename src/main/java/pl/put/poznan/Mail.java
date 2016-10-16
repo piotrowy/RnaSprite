@@ -38,22 +38,22 @@ public class Mail {
 	/**
 	 * application email address.
 	 */
-	private static final String SEND_FROM = AppController.config.email();
+	private static final String SEND_FROM = AppController.getConfig().getEmail();
 
 	/**
 	 * application name.
 	 */
-	private static final String USERNAME = AppController.config.emailUsername();
+	private static final String USERNAME = AppController.getConfig().getEmailUsername();
 
 	/**
 	 * password to email.
 	 */
-	private static final String PASSWORD = AppController.config.emailPassword();
+	private static final String PASSWORD = AppController.getConfig().getEmailPassword();
 
 	/**
 	 * host of email address.
 	 */
-	private static final String HOST = AppController.config.emailHost();
+	private static final String HOST = AppController.getConfig().getEmailHost();
 
 	/**
 	 * email address at which charts are sent.
@@ -77,7 +77,7 @@ public class Mail {
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.host", HOST);
-		properties.put("mail.smtp.port", AppController.config.emailPort());
+		properties.put("mail.smtp.port", AppController.getConfig().getEmailPort());
 		properties.put("mail.smtp.socketFactory.class",
 				"javax.net.ssl.SSLSocketFactory");
 
@@ -119,7 +119,7 @@ public class Mail {
 			}
 
 			Transport transport = session.getTransport("smtp");
-			transport.connect("smtp.gmail.com", this.USERNAME, this.PASSWORD);
+			transport.connect("smtp.gmail.com", Mail.USERNAME, Mail.PASSWORD);
 			transport.sendMessage(message, message.getAllRecipients());
 			transport.close();
 		} catch (MessagingException ex) {

@@ -46,7 +46,7 @@ public final class SessionHolder {
                 Date d = new Date();
                 sessionMap.entrySet().stream().filter(map -> TimeUnit.MILLISECONDS.toMinutes(
                         d.getTime() - map.getValue().getLastUseTime().getTime()) >= Integer.parseInt(
-                        AppController.getConfig().sessionInterval())).forEach(map -> sessionMap.remove(map.getKey()));
+                        AppController.getConfig().getSessionInterval())).forEach(map -> sessionMap.remove(map.getKey()));
             }
         };
         TimerTask timerTask2 = new TimerTask() {
@@ -57,11 +57,11 @@ public final class SessionHolder {
         };
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(timerTask1,
-                Integer.parseInt(AppController.getConfig().sessionMapDelay()),
-                Integer.parseInt(AppController.getConfig().sessionMapInterval()));
+                Integer.parseInt(AppController.getConfig().getSessionMapDelay()),
+                Integer.parseInt(AppController.getConfig().getSessionMapInterval()));
         timer.scheduleAtFixedRate(timerTask2,
-                Integer.parseInt(AppController.getConfig().pdbIdListDelay()),
-                Integer.parseInt(AppController.getConfig().pdbIdListInterval()));
+                Integer.parseInt(AppController.getConfig().getPdbIdsSetDelay()),
+                Integer.parseInt(AppController.getConfig().getPdbIdsSetInterval()));
     }
 
     /**
