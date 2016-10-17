@@ -91,7 +91,6 @@ public final class ConfigService {
 
     /**
      * it loads properties, from config.properties file, to properties variable.
-     *
      * @throws IOException when config.properties file does not exist or it is not readable.
      */
     public ConfigService() throws IOException {
@@ -115,3 +114,5 @@ public final class ConfigService {
         this.pdbIdsSetInterval = this.properties.getProperty("timerTask.currentPdbIdList.timeInterval");
     }
 }
+
+
