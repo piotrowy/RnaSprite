@@ -1,6 +1,8 @@
-package pl.put.poznan;
+package pl.put.poznan.Session;
 
 import lombok.Getter;
+import pl.put.poznan.AppController;
+import pl.put.poznan.PdbIdContainer;
 
 import java.util.Date;
 import java.util.Map;

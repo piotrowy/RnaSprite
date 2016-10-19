@@ -25,7 +25,7 @@ import java.util.Map;
 public class StructureContainer {
 
     /**
-     * @return list of angle's greek names.
+     * @return map of angle's greek names.
      */
     public static Map<String, String> getGreekAnglesNames() {
         return greekAnglesNames;

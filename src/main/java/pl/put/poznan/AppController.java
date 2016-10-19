@@ -6,6 +6,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import pl.put.poznan.Session.SessionData;
+import pl.put.poznan.Session.SessionHolder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -106,7 +108,7 @@ public class AppController {
      * @param func which is called if predicate pred returns true.
      * @return response created by func function or failure message.
      */
-    private Response getResponse(String param, Predicate pred, Function<String, Response> func) {
+    private Response getResponse(final String param, final Predicate pred, final Function<String, Response> func) {
         if (pred.test(param)) {
             return func.apply(param);
         }
@@ -128,16 +130,16 @@ public class AppController {
 
     /**
      *
-     * @param uploadedInputStream
-     * @param fileDetail
-     * @return
+     * @param uploadedInputStream pdb file uploaded by user.
+     * @param fileDetail file details?
+     * @return session id mapped to uploaded file.
      */
     @POST
     @Path("structureFile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_HTML)
     public final Response uploadStructure(@FormDataParam("modelFile") final InputStream uploadedInputStream,
-                                    @FormDataParam("modelFile") final FormDataContentDisposition fileDetail) {
+                                          @FormDataParam("modelFile") final FormDataContentDisposition fileDetail) {
         File uploadedFileLocation = null;
         FileOutputStream outputStream = null;
 
@@ -186,14 +188,14 @@ public class AppController {
 
     /**
      *
-     * @param sessionId
-     * @param chain
-     * @param at1
-     * @param at2
-     * @return
+     * @param sessionId which is mapped to pdb structure which is compute.
+     * @param chain in which application finds residues.
+     * @param at1 distance is counted betwee two atoms.
+     * @param at2 distance is counted betwee two atoms.
+     * @return matrix of distances between two atoms in all residues in specified chain.
      */
     @GET
-    @Path("distanceMatrix")
+    @Path("distances")
     @Produces(MediaType.APPLICATION_JSON)
     public final Response getDistanceMatrix(
             @QueryParam("sessionId") final String sessionId,
@@ -208,8 +210,17 @@ public class AppController {
         });
     }
 
+    /**
+     *
+     * @param sessionId which is mapped to pdb structure which is compute.
+     * @param fragmentsDefinition ???
+     * @param paramList ???
+     * @param at1 distance is counted betwee two atoms.
+     * @param at2 distance is counted betwee two atoms.
+     * @return fragment of matrix of distances between two atoms in all residues in specified chain.
+     */
     @GET
-    @Path("distanceMatrixFragment")
+    @Path("distancesFragment")
     @Produces(MediaType.APPLICATION_JSON)
     public final Response getFragmentOfDistanceMatrix(
             @QueryParam("sessionId") final String sessionId,
@@ -225,6 +236,11 @@ public class AppController {
         });
     }
 
+    /**
+     *
+     * @param sessionId mapped to pdb structure which is compute.
+     * @return torsion angles matrix.
+     */
     @GET
     @Path("angles")
     @Produces(MediaType.APPLICATION_JSON)
@@ -232,11 +248,14 @@ public class AppController {
         return checkSessionIdAndGetResponse(sessionId, (s) -> {
             AppController.getSessionMap().get(UUID.fromString(s)).setLastUseTime(new Date());
             return Response.ok(new TorsionAngleMatrix(
-                    AppController.getSessionMap().get(UUID.fromString(s)).getStructure()),
+                            AppController.getSessionMap().get(UUID.fromString(s)).getStructure()),
                     MediaType.APPLICATION_JSON).build();
         });
     }
 
+    /**
+     * this method sends email with generated charts.
+     */
     @GET
     @Path("sendEmail")
     @Produces(MediaType.TEXT_PLAIN)
@@ -244,13 +263,4 @@ public class AppController {
         Mail mail = new Mail("petr.ceranek@gmail.com", null);
         mail.sendMail("hw", "hello world!");
     }
-
-    // TODO: 22.03.2016 -  wypluwanie csv
-    // TODO: 22.03.2016 - metoda do pliku konfiguracyjnego
-    // TODO: 31.03.2016 - forna pozytac d3js.org
-    // TODO: 31.03.2016 - metoda distancematrix ze szczegolwym definiowaniem atomow A63A,5;[...] - dla katow tez ktore katy
-    // TODO: 31.03.2016 - jsmol wyswietlanie struktury
-    // TODO: 31.03.2016 - svg plik do wysylania na mejla + plik do pobrania
-    // TODO: 31.03.2016 - statyczna mapa do taskow + listener do czyszczenia
-    // TODO: [lancuch][resztainsertioncode][ile];
 }

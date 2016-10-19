@@ -1,10 +1,11 @@
-package pl.put.poznan;
+package pl.put.poznan.Session;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import pl.put.poznan.StructureContainer;
 
 import java.util.Date;
 
