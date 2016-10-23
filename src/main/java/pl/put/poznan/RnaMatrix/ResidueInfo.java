@@ -21,4 +21,9 @@ public @Data class ResidueInfo {
      * Residue number;
      */
     private String resNo;
+
+    /**
+     * Canonical structure extraction.
+     */
+    private String dotBracketRepr;
 }

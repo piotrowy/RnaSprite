@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import pl.put.poznan.RnaMatrix.GreekAngleName;
 import pl.put.poznan.Session.SessionData;
 import pl.put.poznan.Session.SessionHolder;
 
@@ -244,13 +245,8 @@ public class AppController {
     @GET
     @Path("angles")
     @Produces(MediaType.APPLICATION_JSON)
-    public final Response getTorsionAngles(@QueryParam("sessionId") final String sessionId) {
-        return checkSessionIdAndGetResponse(sessionId, (s) -> {
-            AppController.getSessionMap().get(UUID.fromString(s)).setLastUseTime(new Date());
-            return Response.ok(new TorsionAngleMatrix(
-                            AppController.getSessionMap().get(UUID.fromString(s)).getStructure()),
-                    MediaType.APPLICATION_JSON).build();
-        });
+    public final List<String> getTorsionAngles(@QueryParam("sessionId") final String sessionId) {
+        return new GreekAngleName().getGreekAngleNamesList();
     }
 
     /**

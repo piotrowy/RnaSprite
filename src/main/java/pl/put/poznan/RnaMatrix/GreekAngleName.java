@@ -54,7 +54,7 @@ public class GreekAngleName {
      *
      * @return list of angle's greek names
      */
-    private List<String> getGreekAngleNamesList() {
+    public final List<String> getGreekAngleNamesList() {
         return Arrays.stream(RNATorsionAngleType.values()).map(s -> this.greekNamesMap.get(s.toString().toLowerCase
                 ())).collect(Collectors.toList());
     }

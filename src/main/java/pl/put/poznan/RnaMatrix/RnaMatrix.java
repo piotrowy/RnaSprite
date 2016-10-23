@@ -60,4 +60,11 @@ public class RnaMatrix {
      *
      */
     private List<List<Double>> data;
+
+    /**
+     * It is a variable which stores reference to object which
+     * implements MatrixCalculation interface. It has got
+     * calculate method to obtain proper RnaMatrix.
+     */
+    private MatrixCalculation calculationMethod;
 }
