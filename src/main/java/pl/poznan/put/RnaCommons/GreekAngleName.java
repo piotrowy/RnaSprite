@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by piotrowy on 19.10.2016.
- */
 @Configuration
 public class GreekAngleName {
 
@@ -54,7 +51,8 @@ public class GreekAngleName {
      * @return list of angle's greek names
      */
     public final List<String> getGreekAngleNamesList() {
-        return Arrays.stream(RNATorsionAngleType.values()).map(s -> this.greekNamesMap.get(s.toString().toLowerCase
-                ())).collect(Collectors.toList());
+        return Arrays.stream(RNATorsionAngleType.values())
+                .map(s -> this.greekNamesMap.get(s.toString().toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

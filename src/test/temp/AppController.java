@@ -8,6 +8,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import pl.poznan.put.RnaCommons.GreekAngleName;
 import pl.poznan.put.Session.SessionData;
+import pl.poznan.put.Util.ConfigService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -90,7 +91,7 @@ public class AppController {
      * @return response created by func function or failure message.
      */
 //    private Response checkPdbIdAndGetResponse(final String pdbId, final Function<String, Response> func) {
-//        return getResponse(pdbId, (s) -> !s.equals("") && s.toString().length() == PDB_ID_LENGTH && PdbIdContainer.
+//        return getResponse(pdbId, (s) -> !s.equals("") && s.toString().length() == PDB_ID_LENGTH && PdbIdsManager.
 //                isPdbIdExists((String) s), func);
 //    }
 

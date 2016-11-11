@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import pl.poznan.put.ConfigService;
+import pl.poznan.put.Util.ConfigService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,14 +19,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * Created by piotrowy on 15.10.2016.
- */
 @Slf4j
 @Singleton
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class PdbIdContainer {
+public class PdbIdsManager {
 
     private static final String PDB_TAG = "PDB";
 
@@ -44,7 +41,7 @@ public class PdbIdContainer {
      * @param uri where pdb sturctures are stored.
      * @return parsed pdb ids from uri.
      */
-    private Set<String> getPdbIdsFromUri(String uri) {
+    private Set<String> getPdbIdsFromUri(final String uri) {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -64,28 +61,28 @@ public class PdbIdContainer {
      * @param pdbId - id of pdb file.
      * @return true if pdb id exists in pdbSet, in other case @return is false.
      */
-    public Boolean isPdbIdExists(final String pdbId) {
+    public final Boolean isPdbIdExists(final String pdbId) {
         return pdbIdSet.contains(pdbId.toUpperCase());
     }
 
     /**
      * @return all current, parsed pdb ids.
      */
-    public Set<String> currentPdbIds() {
+    public final Set<String> currentPdbIds() {
         return getPdbIdsFromUri(this.configService.getCurrentPdbIdsSetUrl());
     }
 
     /**
      * @return all obsolete, parsed pdb ids.
      */
-    public Set<String> obsoletePdbIds() {
+    public final Set<String> obsoletePdbIds() {
         return getPdbIdsFromUri(this.configService.getObsoletePdbIdsSetUrl());
     }
 
     /**
      * @return all current and obsolete pdb ids (downloaded from http://www.rcsb.org).
      */
-    public Set<String> allPdbIds() {
+    public final Set<String> allPdbIds() {
         Set<String> newSet = new HashSet<String>(currentPdbIds());
         newSet.addAll(obsoletePdbIds());
         return newSet;
@@ -94,12 +91,12 @@ public class PdbIdContainer {
     /**
      * it updates pdb ids set.
      */
-    public void update() {
+    public final void update() {
         pdbIdSet = allPdbIds();
     }
 
-    @Scheduled(fixedRate = 600000)
-    public void refresh() {
+    @Scheduled(fixedRate = 6000)
+    public final void refresh() {
         this.update();
     }
 

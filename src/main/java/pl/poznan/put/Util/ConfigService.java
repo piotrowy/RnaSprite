@@ -1,4 +1,4 @@
-package pl.poznan.put;
+package pl.poznan.put.Util;
 
 import lombok.Getter;
 import org.springframework.context.annotation.Configuration;
@@ -6,9 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 import java.util.Properties;
 
-/**
- * Created by piotrowy on 04.05.2016.
- */
 @Configuration
 public class ConfigService {
 
@@ -96,7 +93,7 @@ public class ConfigService {
     private static final String MAIL_HOST = "mail.host";
     private static final String MAIL_MAIL = "mail.mail";
     private static final String MAIL_PORT = "mail.port";
-    private static final String SESSION_INTERVAL = "sessionHolder.sessionTime";
+    private static final String SESSION_INTERVAL = "sessionManager.sessionTime";
     private static final String OBSOLETE_PDB_IDS = "obsoletePdbIds";
     private static final String CURRENT_PDB_IDS = "currentPdbIds";
     private static final String SESSION_MAP_TIME_DELAY = "timerTask.sessionMap.timeDelay";

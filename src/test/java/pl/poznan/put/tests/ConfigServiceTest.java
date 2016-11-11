@@ -1,7 +1,7 @@
 package pl.poznan.put.tests;
 
 import org.junit.Before;
-import pl.poznan.put.ConfigService;
+import pl.poznan.put.Util.ConfigService;
 
 import java.io.IOException;
 
