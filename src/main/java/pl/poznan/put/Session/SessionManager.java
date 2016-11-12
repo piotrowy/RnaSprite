@@ -30,6 +30,7 @@ public final class SessionManager {
 
     @Scheduled(fixedRate = 60000)
     public void refreshSessionMap() {
+        log.info("SESSION CRON");
         sessionMap.entrySet().stream()
                 .filter(map -> TimeUnit.MILLISECONDS.toMinutes(new Date().getTime() - map.getValue().getLastUseTime().getTime())
                         >= Integer.parseInt(this.configService.getSessionInterval()))

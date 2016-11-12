@@ -18,7 +18,7 @@ public class ChainsListController {
 
     private final SessionManager sessionManager;
 
-    @RequestMapping("/chains")
+    @RequestMapping(value = "/chains/{sessionId}")
     public final List<String> chains(@PathVariable("sessionId") final String sessionId) {
         if (this.sessionManager.hasSession(UUID.fromString(sessionId))) {
             return new PdbStructureChains(this.sessionManager.getSession(UUID.fromString(sessionId)).getStructure()).getList();

@@ -1,4 +1,4 @@
-package pl.poznan.put.DistanceMatrix2;
+package pl.poznan.put.DistanceMatrix;
 
 import pl.poznan.put.RnaMatrix.RnaMatrix;
 

@@ -87,6 +87,9 @@ public class ConfigService {
     @Getter
     private String pdbIdsSetInterval;
 
+    @Getter
+    private String errorMessage;
+
     private static final String CONFIG_FILE_PATH = "./config.properties";
     private static final String MAIL_PASSWORD = "mail.password";
     private static final String MAIL_USERNAME = "mail.username";
@@ -100,6 +103,7 @@ public class ConfigService {
     private static final String SESSION_MAP_TIME_INTERVAL = "timerTask.sessionMap.timeInterval";
     private static final String PDB_IDS_SET_TIME_DELAY = "timerTask.currentPdbIdList.timeDelay";
     private static final String PDB_IDS_SET_TIME_INTERVAL = "timerTask.currentPdbIdList.timeInterval";
+    private static final String ERROR_MESSAGE = "error.message";
 
 
     /**
@@ -126,6 +130,8 @@ public class ConfigService {
         this.sessionMapInterval = this.properties.getProperty(SESSION_MAP_TIME_INTERVAL);
         this.pdbIdsSetDelay = this.properties.getProperty(PDB_IDS_SET_TIME_DELAY);
         this.pdbIdsSetInterval = this.properties.getProperty(PDB_IDS_SET_TIME_INTERVAL);
+
+        this.errorMessage = this.properties.getProperty(ERROR_MESSAGE);
     }
 }
 

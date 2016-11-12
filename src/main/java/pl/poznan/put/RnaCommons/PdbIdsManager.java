@@ -97,6 +97,7 @@ public class PdbIdsManager {
 
     @Scheduled(fixedRate = 6000)
     public final void refresh() {
+        log.info("PDB IDS CRON");
         this.update();
     }
 

@@ -1,4 +1,4 @@
-package pl.poznan.put.Util;
+package pl.poznan.put.Error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
