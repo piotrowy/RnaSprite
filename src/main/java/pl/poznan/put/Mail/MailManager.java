@@ -27,7 +27,7 @@ public class MailManager {
             helper.setFrom(this.configService.getEmailUsername());
             helper.setTo(content.getTo());
             helper.setSubject(content.getSubject());
-            helper.setText(content.getText());
+            helper.setText(content.formatText(this.configService.getEmailUsername()));
 
             this.addAttachments(helper, content);
         } catch (MessagingException ex) {

@@ -10,8 +10,11 @@ public class MailContent {
 
     private String to;
     private String dear;
-    private String content;
     private String subject;
     private String text;
     private List<File> attachments;
+
+    public String formatText(final String from) {
+        return String.format("Dear {},\n\t{}\n{}", this.dear, this.text, from);
+    }
 }

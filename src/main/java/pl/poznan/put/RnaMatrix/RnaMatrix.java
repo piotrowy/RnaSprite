@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Created by piotrowy on 19.10.2016.
- */
 @Data
 @Builder
 @NoArgsConstructor

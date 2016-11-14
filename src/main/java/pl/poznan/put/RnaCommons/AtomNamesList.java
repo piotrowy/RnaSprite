@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * @author piotrowy
- */
 @Configuration
 public class AtomNamesList {
 

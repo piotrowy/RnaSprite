@@ -3,6 +3,7 @@ package pl.poznan.put.Util;
 import lombok.Getter;
 import org.springframework.context.annotation.Configuration;
 
+import javax.ws.rs.GET;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -96,6 +97,12 @@ public class ConfigService {
     @Getter
     private String errorMessage;
 
+    @Getter
+    private String exceptionNotFoundMessage;
+
+    @Getter
+    private String exceptionInvalidEmailAddress;
+
     private static final String CONFIG_FILE_PATH = "./config.properties";
     private static final String MAIL_PASSWORD = "mail.password";
     private static final String MAIL_HOST = "mail.host";
@@ -112,6 +119,8 @@ public class ConfigService {
     private static final String PDB_IDS_SET_TIME_DELAY = "timerTask.currentPdbIdList.timeDelay";
     private static final String PDB_IDS_SET_TIME_INTERVAL = "timerTask.currentPdbIdList.timeInterval";
     private static final String ERROR_MESSAGE = "error.message";
+    private static final String EXCEPTION_NOT_FOUND_MESSAGE = "error.structureNotFound.message";
+    private static final String EXCEPTION_INVALID_EMAIL_ADDRESS = "error.invalidMail";
 
 
     /**
@@ -142,6 +151,8 @@ public class ConfigService {
         this.pdbIdsSetInterval = this.properties.getProperty(PDB_IDS_SET_TIME_INTERVAL);
 
         this.errorMessage = this.properties.getProperty(ERROR_MESSAGE);
+        this.exceptionNotFoundMessage = this.properties.getProperty(EXCEPTION_NOT_FOUND_MESSAGE);
+        this.exceptionInvalidEmailAddress = this.properties.getProperty(EXCEPTION_INVALID_EMAIL_ADDRESS);
     }
 }
 
