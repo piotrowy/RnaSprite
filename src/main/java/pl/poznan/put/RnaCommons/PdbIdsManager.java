@@ -10,7 +10,6 @@ import org.w3c.dom.NodeList;
 import pl.poznan.put.Util.ConfigService;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.Collections;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
-@Singleton
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class PdbIdsManager {
@@ -95,7 +93,7 @@ public class PdbIdsManager {
         pdbIdSet = allPdbIds();
     }
 
-    @Scheduled(fixedRate = 6000)
+    @Scheduled(fixedRate = 3600000)
     public final void refresh() {
         log.info("PDB IDS CRON");
         this.update();

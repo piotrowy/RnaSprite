@@ -13,7 +13,7 @@ import javax.inject.Inject;
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 
-public class UriController implements ErrorController {
+public class UriErrorController implements ErrorController {
 
     private final ConfigService configService;
 
@@ -21,11 +21,11 @@ public class UriController implements ErrorController {
 
     @RequestMapping(PATH)
     public final ResponseEntity<String> error() {
-        return new ResponseEntity<>(this.configService.getErrorMessage(), HttpStatus.OK);
+        return new ResponseEntity<>(this.configService.getErrorMessage(), HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public String getErrorPath() {
+    public final String getErrorPath() {
         return PATH;
     }
 }

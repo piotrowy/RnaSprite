@@ -2,8 +2,6 @@ package pl.poznan.put.Controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,15 +26,15 @@ public class SessionController {
     private static final int PDB_ID_LENGTH = 4;
 
     @RequestMapping("/pdbId/{id}")
-    public final ResponseEntity<UUID> sessionId(@PathVariable("id") final String id) throws IOException, PdbParsingException {
+    public final UUID sessionId(@PathVariable("id") final String id) throws IOException, PdbParsingException {
         log.info("PdbId {}", id);
         if (this.checkPdbId(id)) {
-            return new ResponseEntity<>(this.getSession(id), HttpStatus.OK);
+            return this.getSession(id);
         }
         throw new NotFoundException("Id not found in the request");
     }
 
-    private Boolean checkPdbId(final String id) {
+    private boolean checkPdbId(final String id) {
         return id.length() == PDB_ID_LENGTH && pdbIdsManager.isPdbIdExists(id);
     }
 

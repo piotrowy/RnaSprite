@@ -43,7 +43,13 @@ public class ConfigService {
      * application email address.
      */
     @Getter
-    private String email;
+    private String emailName;
+
+    @Getter
+    private String smtpAuth;
+
+    @Getter
+    private String smtpStarttls;
 
     /**
      * time after which the session expires.
@@ -92,10 +98,12 @@ public class ConfigService {
 
     private static final String CONFIG_FILE_PATH = "./config.properties";
     private static final String MAIL_PASSWORD = "mail.password";
-    private static final String MAIL_USERNAME = "mail.username";
     private static final String MAIL_HOST = "mail.host";
-    private static final String MAIL_MAIL = "mail.mail";
+    private static final String MAIL_NAME = "mail.name";
+    private static final String MAIL_USERNAME = "mail.username";
     private static final String MAIL_PORT = "mail.port";
+    private static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
+    private static final String MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
     private static final String SESSION_INTERVAL = "sessionManager.sessionTime";
     private static final String OBSOLETE_PDB_IDS = "obsoletePdbIds";
     private static final String CURRENT_PDB_IDS = "currentPdbIds";
@@ -118,8 +126,10 @@ public class ConfigService {
         this.emailPassword = this.properties.getProperty(MAIL_PASSWORD);
         this.emailUsername = this.properties.getProperty(MAIL_USERNAME);
         this.emailHost = this.properties.getProperty(MAIL_HOST);
-        this.email = this.properties.getProperty(MAIL_MAIL);
+        this.emailName = this.properties.getProperty(MAIL_NAME);
         this.emailPort = this.properties.getProperty(MAIL_PORT);
+        this.smtpStarttls = this.properties.getProperty(MAIL_SMTP_STARTTLS_ENABLE);
+        this.smtpAuth = this.properties.getProperty(MAIL_SMTP_AUTH);
 
         this.sessionInterval = this.properties.getProperty(SESSION_INTERVAL);
 

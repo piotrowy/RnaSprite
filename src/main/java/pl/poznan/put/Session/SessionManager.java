@@ -28,7 +28,7 @@ public final class SessionManager {
      */
     private static Map<UUID, SessionData> sessionMap = new ConcurrentHashMap<>();
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 300000)
     public void refreshSessionMap() {
         log.info("SESSION CRON");
         sessionMap.entrySet().stream()

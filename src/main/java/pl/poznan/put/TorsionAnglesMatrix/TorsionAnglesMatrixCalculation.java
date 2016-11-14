@@ -7,7 +7,7 @@ import pl.poznan.put.Structure.PdbStructure;
 public class TorsionAnglesMatrixCalculation implements MatrixCalculation {
 
     @Override
-    public RnaMatrix calculateMatrix(PdbStructure structure) {
+    public final RnaMatrix calculateMatrix(final PdbStructure structure) {
         if (!structure.getModels().isEmpty()) {
             return null;
         }

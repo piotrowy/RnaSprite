@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exceptionHandler(Exception ex) {
+    public final ResponseEntity<ErrorResponse> exceptionHandler(final Exception ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Please contact your administrator");
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.OK);
     }

@@ -92,7 +92,7 @@ public class DistanceMatrix extends Matrix {
                 .collect(Collectors.toList());
     }
 
-    public static Boolean checkIfChainRequest(String param) {
+    public static boolean checkIfChainRequest(String param) {
         return param.matches("([A-Za-z0-9]+,[A-Za-z0-9]+,[0-9]+;)*");
     }
 }

@@ -7,7 +7,7 @@ import pl.poznan.put.Structure.PdbStructure;
 public class DistancesMatrixCalculation implements MatrixCalculation {
 
     @Override
-    public RnaMatrix calculateMatrix(PdbStructure structure) {
+    public final RnaMatrix calculateMatrix(final PdbStructure structure) {
         return null;
     }
 }

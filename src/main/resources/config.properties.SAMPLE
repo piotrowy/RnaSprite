@@ -1,13 +1,19 @@
 mail.host=
 mail.username=
-mail.mail=
+mail.name=
 mail.password=
 mail.port=
+mail.smtp.starttls.enable=true
+mail.smtp.auth=true
 
-timerTask.currentPdbIdList.timeInterval=
-timerTask.currentPdbIdList.timeDelay=
-timerTask.sessionMap.timeInterval=
-timerTask.sessionMap.timeDelay=
+sessionManager.sessionTime=30
+
+timerTask.currentPdbIdList.timeInterval=3600000
+timerTask.currentPdbIdList.timeDelay=0
+timerTask.sessionMap.timeInterval=60000
+timerTask.sessionMap.timeDelay=0
 
 currentPdbIds=http://www.rcsb.org/pdb/rest/getCurrent
 obsoletePdbIds=http://www.rcsb.org/pdb/rest/getObsolete
+
+error.message=There is no such address. But if you want see some fancy RNA charts you can come back to the main page.

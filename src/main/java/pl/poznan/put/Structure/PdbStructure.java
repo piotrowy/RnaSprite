@@ -14,15 +14,15 @@ public class PdbStructure {
 
     private List<PdbModel> models;
 
-    public static PdbStructure fromString(String pdbId) throws IOException, PdbParsingException {
+    public static PdbStructure fromString(final String pdbId) throws IOException, PdbParsingException {
         return new PdbStructure(pdbId);
     }
 
-    private PdbStructure(String pdbId) throws IOException, PdbParsingException {
+    private PdbStructure(final String pdbId) throws IOException, PdbParsingException {
         this.models = StructureManager.loadStructure(pdbId);
     }
 
-    public PdbStructure(File file) throws IOException, PdbParsingException {
+    public PdbStructure(final File file) throws IOException, PdbParsingException {
         this.models = StructureManager.loadStructure(file);
     }
 }

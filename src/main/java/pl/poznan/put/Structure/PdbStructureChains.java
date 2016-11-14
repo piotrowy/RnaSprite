@@ -3,7 +3,6 @@ package pl.poznan.put.Structure;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Scope;
-import pl.poznan.put.Structure.PdbStructure;
 
 import java.util.ArrayList;
 import java.util.List;
