@@ -1,17 +1,12 @@
 package pl.poznan.put.RnaMatrix;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class RnaMatrix {
+public class RnaMatrix<T, U, V>{
 
     /**
      * labels for y values. List of string or custom objects.
@@ -25,7 +20,7 @@ public class RnaMatrix {
      * | y.a label 2 | y.b label 2 | y.c label 2 |
      * |_____________|_____________|_____________|___
      */
-    private List<?> yLabels;
+    private List<T> yLabels;
 
     /**
      * labels for x values. List of string or custom objects.
@@ -42,7 +37,7 @@ public class RnaMatrix {
      * |____|_____________|_____________|_____________|
      * |    |             |             |             |
      */
-    private List<?> xLabels;
+    private List<U> xLabels;
 
     /**
      * data which fill matrix.
@@ -55,12 +50,11 @@ public class RnaMatrix {
      * | 0.0 | 0.0 | 0.0 | 0.0 |
      * _|_____|_____|_____|_____|
      */
-    private List<List<Double>> data;
+    private List<List<V>> data;
 
-    /**
-     * It is a variable which stores reference to object which
-     * implements MatrixCalculation interface. It has got
-     * calculate method to obtain proper RnaMatrix.
-     */
-    private MatrixCalculation calculationMethod;
+    public RnaMatrix() {
+        this.yLabels = new ArrayList<>();
+        this.xLabels = new ArrayList<>();
+        this.data = new ArrayList<>();
+    }
 }

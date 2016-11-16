@@ -3,7 +3,6 @@ package pl.poznan.put.Util;
 import lombok.Getter;
 import org.springframework.context.annotation.Configuration;
 
-import javax.ws.rs.GET;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -101,7 +100,10 @@ public class ConfigService {
     private String exceptionNotFoundMessage;
 
     @Getter
-    private String exceptionInvalidEmailAddress;
+    private String exceptionInvalidEmailAddressMessage;
+
+    @Getter
+    private String exceptionStructureIsEmptyMessage;
 
     private static final String CONFIG_FILE_PATH = "./config.properties";
     private static final String MAIL_PASSWORD = "mail.password";
@@ -121,6 +123,7 @@ public class ConfigService {
     private static final String ERROR_MESSAGE = "error.message";
     private static final String EXCEPTION_NOT_FOUND_MESSAGE = "error.structureNotFound.message";
     private static final String EXCEPTION_INVALID_EMAIL_ADDRESS = "error.invalidMail";
+    private static final String EXCEPTION_STRUCTURE_IS_EMPTY = "error.structureIsEmpty";
 
 
     /**
@@ -152,7 +155,8 @@ public class ConfigService {
 
         this.errorMessage = this.properties.getProperty(ERROR_MESSAGE);
         this.exceptionNotFoundMessage = this.properties.getProperty(EXCEPTION_NOT_FOUND_MESSAGE);
-        this.exceptionInvalidEmailAddress = this.properties.getProperty(EXCEPTION_INVALID_EMAIL_ADDRESS);
+        this.exceptionInvalidEmailAddressMessage = this.properties.getProperty(EXCEPTION_INVALID_EMAIL_ADDRESS);
+        this.exceptionStructureIsEmptyMessage = this.properties.getProperty(EXCEPTION_STRUCTURE_IS_EMPTY);
     }
 }
 

@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Configuration
-public class GreekAngleName {
+public class GreekAnglesNames {
 
     /**
      * it maps angle type names to unicode value.
@@ -26,7 +26,7 @@ public class GreekAngleName {
     /**
      * constructor puts all types to map.
      */
-    public GreekAngleName() {
+    public GreekAnglesNames() {
         this.greekNamesMap = new HashMap<>();
         this.greekNamesMap.put("alpha", Unicode.ALPHA);
         this.greekNamesMap.put("beta", Unicode.BETA);
