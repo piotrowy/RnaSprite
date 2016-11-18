@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Scope("prototype")
-@Configuration
+@Component
 @Data
 public class PdbStructureChains {
 

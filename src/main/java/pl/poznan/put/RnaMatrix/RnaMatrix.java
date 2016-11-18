@@ -1,17 +1,24 @@
 package pl.poznan.put.RnaMatrix;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Component
+@Scope("prototype")
 public class RnaMatrix<T, U, V>{
 
     /**
      * labels for y values. List of string or custom objects.
      * <p>
-     * _____________ _____________ _____________ ___
+     *  _____________ _____________ _____________ ___
      * |_____________|_____________|_____________|___
      * |             |             |             |
      * | y.a label 1 | y.b label 1 | y.c label 1 |
@@ -19,13 +26,14 @@ public class RnaMatrix<T, U, V>{
      * |             |             |             |
      * | y.a label 2 | y.b label 2 | y.c label 2 |
      * |_____________|_____________|_____________|___
+     *
      */
     private List<T> yLabels;
 
     /**
      * labels for x values. List of string or custom objects.
      * <p>
-     * ____ _____________ _____________ _____________
+     *  ____ _____________ _____________ _____________
      * |    |             |             |             |
      * |    | x.a label 1 | x.a label 2 | x.a label 3 |
      * |____|_____________|_____________|_____________|
@@ -36,19 +44,22 @@ public class RnaMatrix<T, U, V>{
      * |    | x.c label 1 | x.c label 2 | x.c label 3 |
      * |____|_____________|_____________|_____________|
      * |    |             |             |             |
+     *
      */
     private List<U> xLabels;
 
     /**
      * data which fill matrix.
      * <p>
+     *
      * _|_____|_____|_____|_____|
-     * |     |     |     |     |
-     * | 0.0 | 0.0 | 0.0 | 0.0 |
+     *  |     |     |     |     |
+     *  | 0.0 | 0.0 | 0.0 | 0.0 |
      * _|_____|_____|_____|_____|
-     * |     |     |     |     |
-     * | 0.0 | 0.0 | 0.0 | 0.0 |
+     *  |     |     |     |     |
+     *  | 0.0 | 0.0 | 0.0 | 0.0 |
      * _|_____|_____|_____|_____|
+     *
      */
     private List<List<V>> data;
 

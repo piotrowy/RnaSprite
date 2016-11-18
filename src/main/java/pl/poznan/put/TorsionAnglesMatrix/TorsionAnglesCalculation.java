@@ -1,6 +1,8 @@
 package pl.poznan.put.TorsionAnglesMatrix;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import pl.poznan.put.RnaCommons.GreekAnglesNames;
 import pl.poznan.put.RnaMatrix.MatrixCalculable;
 import pl.poznan.put.RnaMatrix.RnaMatrix;
@@ -16,19 +18,20 @@ import java.text.DecimalFormat;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class TorsionAnglesCalculation implements MatrixCalculable {
+public class TorsionAnglesCalculation implements MatrixCalculable<ResidueInfo, String, AngleData> {
 
     private final GreekAnglesNames greekAnglesNames;
+    private final RnaMatrix<ResidueInfo, String, AngleData> matrix;
 
     private static final String INVALID = "invalid";
     private static final String EMPTY = "-";
+
     private static final DecimalFormat DECIMAL_FORMAT_2 = new DecimalFormat("#,###,###,##0.00");
 
-    private RnaMatrix<ResidueInfo, String, AngleData> matrix;
-
     @Override
-    public final RnaMatrix calculateMatrix(final PdbModel model) {
+    public RnaMatrix<ResidueInfo, String, AngleData> calculateMatrix(final PdbModel model) {
         model.getChains().stream().forEach(this::parseChain);
         this.xLabelsAdd();
 
@@ -51,11 +54,17 @@ public class TorsionAnglesCalculation implements MatrixCalculable {
                         .collect(Collectors.toList()));
     }
 
-    private AngleData setAngleValue(PdbCompactFragment fragment, PdbResidue residue, MasterTorsionAngleType angle) {
+    private AngleData setAngleValue(final PdbCompactFragment fragment, final PdbResidue residue, final MasterTorsionAngleType angle) {
         if (fragment.getTorsionAngleValue(residue, angle).getValue().toString().equalsIgnoreCase(INVALID)) {
-            return new AngleData(EMPTY, EMPTY);
+            return AngleData.builder()
+                    .value(EMPTY)
+                    .secondStructureMark(EMPTY)
+                    .build();
         } else {
-            return new AngleData(DECIMAL_FORMAT_2.format(fragment.getTorsionAngleValue(residue, angle).getValue().getDegrees()), EMPTY);
+            return AngleData.builder()
+                    .value(DECIMAL_FORMAT_2.format(fragment.getTorsionAngleValue(residue, angle).getValue().getDegrees()))
+                    .secondStructureMark(EMPTY)
+                    .build();
         }
     }
 
@@ -63,8 +72,13 @@ public class TorsionAnglesCalculation implements MatrixCalculable {
         this.matrix.setXLabels(this.greekAnglesNames.getGreekAngleNamesList());
     }
 
-    private void yLabelAdd(PdbResidue residue) {
-        this.matrix.getYLabels().add(new ResidueInfo(residue.getResidueNumber(), residue.getOriginalResidueName(),
-                String.valueOf(residue.getOneLetterName()), String.valueOf(residue.getInsertionCode())));
+    private void yLabelAdd(final PdbResidue residue) {
+        this.matrix.getYLabels().add(ResidueInfo.builder()
+                .number(residue.getResidueNumber())
+                .oneLetterName(String.valueOf(residue.getOneLetterName()))
+                .insertionCode("".equals(String.valueOf(residue.getInsertionCode())) ? null : String.valueOf(residue.getInsertionCode()))
+                .originalName(residue.getOriginalResidueName())
+                .dotBracketRepr("")
+                .build());
     }
 }

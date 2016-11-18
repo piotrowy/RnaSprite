@@ -5,9 +5,6 @@ import pl.poznan.put.Util.ConfigService;
 
 import java.io.IOException;
 
-/**
- * Created by piotrowy on 24.05.2016.
- */
 public class ConfigServiceTest {
     private ConfigService cf;
 

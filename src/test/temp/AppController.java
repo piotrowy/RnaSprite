@@ -91,8 +91,8 @@ public class AppController {
      * @return response created by func function or failure message.
      */
 //    private Response checkPdbIdAndGetResponse(final String pdbId, final Function<String, Response> func) {
-//        return getResponse(pdbId, (s) -> !s.equals("") && s.toString().length() == PDB_ID_LENGTH && PdbIdsManager.
-//                isPdbIdExists((String) s), func);
+//        return getResponse(pdbId, (secondStructureMark) -> !secondStructureMark.equals("") && secondStructureMark.toString().length() == PDB_ID_LENGTH && PdbIdsManager.
+//                isPdbIdExists((String) secondStructureMark), func);
 //    }
 
     /**
@@ -117,8 +117,8 @@ public class AppController {
 //    @Path("structureId")
 //    @Produces(MediaType.APPLICATION_JSON)
 //    public final Response uploadStructure(@QueryParam("structurePDB") final String structurePDB) {
-//        return checkPdbIdAndGetResponse(structurePDB.toUpperCase(), (s) -> Response.ok(generateSessionData(
-//                new StructureContainer(s)), MediaType.APPLICATION_JSON).build());
+//        return checkPdbIdAndGetResponse(structurePDB.toUpperCase(), (secondStructureMark) -> Response.ok(generateSessionData(
+//                new StructureContainer(secondStructureMark)), MediaType.APPLICATION_JSON).build());
 //    }
 //
 
@@ -160,9 +160,9 @@ public class AppController {
 //    @Produces(MediaType.APPLICATION_JSON)
 //    public final Response getChainsList(
 //            @QueryParam("sessionId") final String sessionId) {
-//        return checkSessionIdAndGetResponse(sessionId, (s) -> {
-//            AppController.getSessionMap().get(UUID.fromString(s)).setLastUseTime(new Date());
-//            return Response.ok(new PdbStructureChains(AppController.getSessionMap().get(UUID.fromString(s)).getStructure()),
+//        return checkSessionIdAndGetResponse(sessionId, (secondStructureMark) -> {
+//            AppController.getSessionMap().get(UUID.fromString(secondStructureMark)).setLastUseTime(new Date());
+//            return Response.ok(new PdbStructureChains(AppController.getSessionMap().get(UUID.fromString(secondStructureMark)).getStructure()),
 //                    MediaType.APPLICATION_JSON).build();
 //        });
 //    }

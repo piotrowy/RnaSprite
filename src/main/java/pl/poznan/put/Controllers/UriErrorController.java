@@ -1,6 +1,5 @@
 package pl.poznan.put.Controllers;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;

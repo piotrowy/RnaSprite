@@ -8,6 +8,7 @@ package pl.poznan.put.RnaCommons;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import pl.poznan.put.atom.AtomName;
 import pl.poznan.put.rna.Phosphate;
 import pl.poznan.put.rna.Ribose;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Configuration
+@Component
 public class AtomNamesList {
 
     /**

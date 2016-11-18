@@ -1,25 +1,26 @@
 package pl.poznan.put.Session;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
+import pl.poznan.put.RnaMatrix.RnaMatrix;
 import pl.poznan.put.Structure.PdbStructure;
+import pl.poznan.put.TorsionAnglesMatrix.AngleData;
+import pl.poznan.put.TorsionAnglesMatrix.ResidueInfo;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 public class SessionData {
 
-    /**
-     * structure in which user stores pdb file.
-     */
-    @NonNull
     private final PdbStructure structure;
 
-    /**
-     * timestamp when @structure was recently called.
-     */
-    @NonNull
     private Date lastUseTime;
+
+    private List<RnaMatrix<ResidueInfo, String, AngleData>> torsionAngles;
+
+    private List<RnaMatrix<ResidueInfo, String, AngleData>> distances;
 }

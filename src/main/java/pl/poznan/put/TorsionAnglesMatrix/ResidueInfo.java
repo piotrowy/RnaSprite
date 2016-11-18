@@ -1,12 +1,19 @@
 package pl.poznan.put.TorsionAnglesMatrix;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResidueInfo {
 
-    private final int number;
-    private final String originalName;
-    private final String oneLetterName;
-    private final String insertionCode;
+    private Integer number;
+    private String originalName;
+    private String oneLetterName;
+    private String insertionCode;
+    private String dotBracketRepr;
 }

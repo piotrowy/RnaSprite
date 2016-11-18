@@ -1,6 +1,6 @@
 mail.host=
 mail.username=
-mail.name=
+mail.number=
 mail.password=
 mail.port=
 mail.smtp.starttls.enable=true

@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.poznan.put.RnaMatrix.RnaMatrix;
 
 @RestController
-@RequestMapping("/distanceMatrix")
+@RequestMapping("/matrix")
 public class DistanceMatrixController {
 
-    @RequestMapping("/distanceMatrix")
+    @RequestMapping("/distances")
     public final RnaMatrix distanceMatrix(@RequestParam(value = "sessionId") final String sessionId) {
         return null;
     }

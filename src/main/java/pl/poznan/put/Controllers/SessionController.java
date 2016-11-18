@@ -15,7 +15,6 @@ import pl.poznan.put.Structure.PdbStructure;
 import pl.poznan.put.pdb.PdbParsingException;
 
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 

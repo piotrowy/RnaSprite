@@ -3,6 +3,7 @@ package pl.poznan.put.RnaCommons;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import pl.poznan.put.constant.Unicode;
 import pl.poznan.put.rna.torsion.RNATorsionAngleType;
 
@@ -11,8 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@Configuration
+@Component
 public class GreekAnglesNames {
 
     /**
@@ -48,10 +50,11 @@ public class GreekAnglesNames {
     }
 
     /**
-     * @return list of angle's greek names
+     * @return list of angle'secondStructureMark greek names
      */
     public final List<String> getGreekAngleNamesList() {
         return Arrays.stream(RNATorsionAngleType.values())
+                .flatMap(Stream::of)
                 .map(s -> this.greekNamesMap.get(s.toString().toLowerCase()))
                 .collect(Collectors.toList());
     }

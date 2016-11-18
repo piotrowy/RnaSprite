@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pl.poznan.put.Util.ConfigService;
 import pl.poznan.put.Structure.PdbStructure;
+import pl.poznan.put.Util.ConfigService;
 
 import javax.inject.Inject;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +39,9 @@ public final class SessionManager {
     }
 
     public SessionData getSession(final UUID id) {
-        return sessionMap.get(id);
+        SessionData sessionData = sessionMap.get(id);
+        sessionData.setLastUseTime(new Date());
+        return sessionData;
     }
 
     public Boolean hasSession(final UUID id) {
@@ -47,7 +50,11 @@ public final class SessionManager {
 
     public UUID createSession(final PdbStructure structure) {
         UUID id = UUID.randomUUID();
-        sessionMap.put(id, new SessionData(structure, new Date()));
+        sessionMap.put(id, SessionData.builder().structure(structure).lastUseTime(new Date()).build());
         return id;
+    }
+
+    public static Map<UUID, SessionData> getSessionMap() {
+        return SessionManager.sessionMap;
     }
 }

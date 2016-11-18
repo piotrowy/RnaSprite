@@ -2,11 +2,12 @@ package pl.poznan.put.Util;
 
 import lombok.Getter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Properties;
 
-@Configuration
+@Component
 public class ConfigService {
 
     /**
@@ -22,7 +23,7 @@ public class ConfigService {
     private String emailPassword;
 
     /**
-     * application name.
+     * application number.
      */
     @Getter
     private String emailUsername;
