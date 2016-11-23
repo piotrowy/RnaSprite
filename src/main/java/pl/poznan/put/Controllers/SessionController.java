@@ -1,4 +1,4 @@
-package pl.poznan.put.Controllers;
+package pl.poznan.put.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.poznan.put.Exceptions.PdbDoesNotExistException;
-import pl.poznan.put.RnaCommons.PdbIdsManager;
-import pl.poznan.put.Session.SessionManager;
-import pl.poznan.put.Structure.PdbStructure;
+import pl.poznan.put.exceptions.PdbDoesNotExistException;
+import pl.poznan.put.rnacommons.PdbIdsManager;
+import pl.poznan.put.session.SessionManager;
+import pl.poznan.put.structure.PdbStructure;
 import pl.poznan.put.pdb.PdbParsingException;
 
 import javax.inject.Inject;

@@ -1,7 +1,7 @@
-package pl.poznan.put.Exceptions;
+package pl.poznan.put.exceptions;
 
 public class PdbDoesNotExistException extends CustomException {
-    public PdbDoesNotExistException(String message) {
+    public PdbDoesNotExistException(final String message) {
         super(message);
     }
 }

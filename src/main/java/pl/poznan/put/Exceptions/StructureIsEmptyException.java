@@ -1,7 +1,7 @@
-package pl.poznan.put.Exceptions;
+package pl.poznan.put.exceptions;
 
 public class StructureIsEmptyException extends CustomException {
-    public StructureIsEmptyException(String message) {
+    public StructureIsEmptyException(final String message) {
         super(message);
     }
 }

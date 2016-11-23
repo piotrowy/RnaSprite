@@ -1,7 +1,7 @@
-package pl.poznan.put.Exceptions;
+package pl.poznan.put.exceptions;
 
 public class InvalidMailAddressException extends CustomException {
-    public InvalidMailAddressException(String message) {
+    public InvalidMailAddressException(final String message) {
         super(message);
     }
 }

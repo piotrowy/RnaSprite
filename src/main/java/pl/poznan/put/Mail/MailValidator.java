@@ -1,4 +1,4 @@
-package pl.poznan.put.Mail;
+package pl.poznan.put.mail;
 
 import org.springframework.context.annotation.Configuration;
 

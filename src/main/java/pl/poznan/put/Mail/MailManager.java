@@ -1,11 +1,11 @@
-package pl.poznan.put.Mail;
+package pl.poznan.put.mail;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailParseException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import pl.poznan.put.Util.ConfigService;
+import pl.poznan.put.util.ConfigService;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;

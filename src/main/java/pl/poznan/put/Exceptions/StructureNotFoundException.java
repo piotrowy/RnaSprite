@@ -1,7 +1,7 @@
-package pl.poznan.put.Exceptions;
+package pl.poznan.put.exceptions;
 
 public class StructureNotFoundException extends CustomException {
-    public StructureNotFoundException(String message) {
+    public StructureNotFoundException(final String message) {
         super(message);
     }
 }

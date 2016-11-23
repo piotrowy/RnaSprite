@@ -10,9 +10,11 @@ import org.springframework.core.io.Resource;
 public class Config {
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer properties(){
+    public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer pspc = new PropertySourcesPlaceholderConfigurer();
-        Resource[] resources = new ClassPathResource[ ] { new ClassPathResource("config.properties") };
+        Resource[] resources = new ClassPathResource[ ] {
+                new ClassPathResource("config.properties")
+        };
         pspc.setLocations(resources);
         pspc.setIgnoreUnresolvablePlaceholders(true);
         return pspc;

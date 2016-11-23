@@ -1,9 +1,8 @@
-package pl.poznan.put.Structure;
+package pl.poznan.put.structure;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,7 @@ public class PdbStructureChains {
     @Setter
     private List<String> list;
 
-    public List<String> loadFromStructure(final PdbStructure structure) {
+    public final List<String> loadFromStructure(final PdbStructure structure) {
         this.list = new ArrayList<>();
         if (!structure.getModels().isEmpty()) {
             structure.getModels().stream()

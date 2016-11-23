@@ -1,12 +1,12 @@
-package pl.poznan.put.Session;
+package pl.poznan.put.session;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import pl.poznan.put.RnaMatrix.RnaMatrix;
-import pl.poznan.put.Structure.PdbStructure;
-import pl.poznan.put.TorsionAnglesMatrix.AngleData;
-import pl.poznan.put.TorsionAnglesMatrix.ResidueInfo;
+import pl.poznan.put.rnamatrix.Matrix;
+import pl.poznan.put.structure.PdbStructure;
+import pl.poznan.put.torsionanglesmatrix.AngleData;
+import pl.poznan.put.torsionanglesmatrix.ResidueInfo;
 
 import java.util.Date;
 import java.util.List;
@@ -20,7 +20,7 @@ public class SessionData {
 
     private Date lastUseTime;
 
-    private List<RnaMatrix<ResidueInfo, String, AngleData>> torsionAngles;
+    private List<Matrix<ResidueInfo, String, AngleData>> torsionAngles;
 
-    private List<RnaMatrix<ResidueInfo, String, AngleData>> distances;
+    private List<Matrix<ResidueInfo, String, AngleData>> distances;
 }

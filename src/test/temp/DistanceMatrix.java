@@ -28,18 +28,6 @@ import java.util.stream.Collectors;
 @XmlRootElement
 public class DistanceMatrix extends Matrix {
 
-    public DistanceMatrix() {
-        super();
-    }
-
-    public DistanceMatrix(StructureContainer strC, String paramString,
-                          String at1, String at2) {
-        if (checkIfChainRequest(paramString)) {
-            this.matrix = this.generateDistanceMatrix(strC, paramString, at1, at2);
-        } else {
-            this.matrix = this.generateFragmentOfDistanceMatrix(strC, paramString, at1, at2);
-        }
-    }
 
     public List<List<? extends Row>> generateDistanceMatrix(StructureContainer strC, String chainIdentifier, String at1, String at2) {
         if (!strC.getStructureList().isEmpty()) {

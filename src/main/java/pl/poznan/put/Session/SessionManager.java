@@ -1,15 +1,14 @@
-package pl.poznan.put.Session;
+package pl.poznan.put.session;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pl.poznan.put.Structure.PdbStructure;
-import pl.poznan.put.Util.ConfigService;
+import pl.poznan.put.structure.PdbStructure;
+import pl.poznan.put.util.ConfigService;
 
 import javax.inject.Inject;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,7 +31,8 @@ public final class SessionManager {
     @Scheduled(fixedRate = 300000)
     public void refreshSessionMap() {
         log.info("SESSION CRON");
-        sessionMap.entrySet().stream()
+        sessionMap.entrySet()
+                .stream()
                 .filter(map -> TimeUnit.MILLISECONDS.toMinutes(new Date().getTime() - map.getValue().getLastUseTime().getTime())
                         >= Integer.parseInt(this.configService.getSessionInterval()))
                 .forEach(map -> sessionMap.remove(map.getKey()));

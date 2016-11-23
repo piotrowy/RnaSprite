@@ -6,11 +6,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import pl.poznan.put.RnaCommons.GreekAngleName;
-import pl.poznan.put.Session.SessionData;
-import pl.poznan.put.Util.ConfigService;
+import pl.poznan.put.rnacommons.GreekAngleName;
+import pl.poznan.put.session.SessionData;
+import pl.poznan.put.util.ConfigService;
 
-import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -31,96 +30,6 @@ import java.util.function.Predicate;
 @Slf4j
 public class AppController {
 
-    /**
-     * parameter which serves to validate proper length of pdb id.
-     */
-    private static final int PDB_ID_LENGTH = 4;
-
-    /**
-     * logger to log sth.
-     */
-
-    /**
-     * failure message is sent when application can not do computations with given input.
-     */
-    private static final String FAILURE_MESSAGE = "Entity not found for data: ";
-
-    /**
-     * config stores every important param from config.properties file.
-     */
-    @Getter
-    private static ConfigService config;
-
-    /**
-     * @throws IOException because ConfigService reads properties from file.
-     */
-    public AppController() throws IOException {
-        config = new ConfigService();
-    }
-
-    /**
-     * @return sessionMap which stores all session ids and structures mapped to them.
-     */
-    public static Map<UUID, SessionData> getSessionMap() {
-        return null;
-    }
-
-    /**
-     * @param structure which stores pdb file, and all information about RNA structure.
-     * @return id of session.
-     */
-    private String generateSessionData(final StructureContainer structure) {
-        UUID id = UUID.randomUUID();
-        getSessionMap().put(id, new SessionData(structure, new Date()));
-        return id.toString();
-    }
-
-    /**
-     * @param sessionId to which pdb structure is mapped.
-     * @param func      which is called after session id validation.
-     * @return response created by func function or failure message.
-     */
-    private Response checkSessionIdAndGetResponse(final String sessionId, final Function<String, Response> func) {
-        return getResponse(sessionId, (s) -> !s.equals("")
-                && AppController.getSessionMap().containsKey(UUID.fromString(s.toString())), func);
-    }
-
-    /**
-     * @param pdbId is id of pdb structure.
-     * @param func which is called after pdb id validation.
-     * @return response created by func function or failure message.
-     */
-//    private Response checkPdbIdAndGetResponse(final String pdbId, final Function<String, Response> func) {
-//        return getResponse(pdbId, (secondStructureMark) -> !secondStructureMark.equals("") && secondStructureMark.toString().length() == PDB_ID_LENGTH && PdbIdsManager.
-//                isPdbIdExists((String) secondStructureMark), func);
-//    }
-
-    /**
-     * @param param which is validated with predicate pred.
-     * @param pred  predicate which serves to validate param.
-     * @param func  which is called if predicate pred returns true.
-     * @return response created by func function or failure message.
-     */
-    private Response getResponse(final String param, final Predicate pred, final Function<String, Response> func) {
-        if (pred.test(param)) {
-            return func.apply(param);
-        }
-        return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE + param).build();
-    }
-
-    /**
-     *
-     * @param structurePDB id of pdb structure.
-     * @return session id which is mapped to pdb structure.
-    //     */
-//    @GET
-//    @Path("structureId")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public final Response uploadStructure(@QueryParam("structurePDB") final String structurePDB) {
-//        return checkPdbIdAndGetResponse(structurePDB.toUpperCase(), (secondStructureMark) -> Response.ok(generateSessionData(
-//                new StructureContainer(secondStructureMark)), MediaType.APPLICATION_JSON).build());
-//    }
-//
 
     /**
      * @param uploadedInputStream pdb file uploaded by user.
@@ -150,22 +59,6 @@ public class AppController {
         }
         return Response.status(Response.Status.NOT_FOUND).entity(FAILURE_MESSAGE).build();
     }
-
-    /**
-     * @param sessionId mapped to pdb structure which is compute.
-     * @return all available chain ids in pdb structure mapped to sessionId.
-     */
-//    @GET
-//    @Path("chains")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public final Response getChainsList(
-//            @QueryParam("sessionId") final String sessionId) {
-//        return checkSessionIdAndGetResponse(sessionId, (secondStructureMark) -> {
-//            AppController.getSessionMap().get(UUID.fromString(secondStructureMark)).setLastUseTime(new Date());
-//            return Response.ok(new PdbStructureChains(AppController.getSessionMap().get(UUID.fromString(secondStructureMark)).getStructure()),
-//                    MediaType.APPLICATION_JSON).build();
-//        });
-//    }
 
     /**
      * @param sessionId which is mapped to pdb structure which is compute.
@@ -213,27 +106,5 @@ public class AppController {
                     UUID.fromString(sessionId)).getStructure(), paramList, at1, at2),
                     MediaType.APPLICATION_JSON).build();
         });
-    }
-
-    /**
-     * @param sessionId mapped to pdb structure which is compute.
-     * @return torsion angles matrix.
-     */
-    @GET
-    @Path("angles")
-    @Produces(MediaType.APPLICATION_JSON)
-    public final List<String> getTorsionAngles(@QueryParam("sessionId") final String sessionId) {
-        return new GreekAngleName().getGreekAngleNamesList();
-    }
-
-    /**
-     * this method sends email with generated charts.
-     */
-    @GET
-    @Path("sendEmail")
-    @Produces(MediaType.TEXT_PLAIN)
-    public final void sendMail() {
-        Mail mail = new Mail("petr.ceranek@gmail.com", null);
-        mail.sendMail("hw", "hello world!");
     }
 }

@@ -1,9 +1,7 @@
-package pl.poznan.put.RnaMatrix;
+package pl.poznan.put.rnamatrix;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Component
+@AllArgsConstructor
 @Scope("prototype")
-public class RnaMatrix<T, U, V>{
+@Component
+public class Matrix<T, U, V> {
+
+    private String name;
 
     /**
      * labels for y values. List of string or custom objects.
@@ -63,9 +64,10 @@ public class RnaMatrix<T, U, V>{
      */
     private List<List<V>> data;
 
-    public RnaMatrix() {
+    public Matrix() {
         this.yLabels = new ArrayList<>();
         this.xLabels = new ArrayList<>();
         this.data = new ArrayList<>();
+        this.name = "";
     }
 }

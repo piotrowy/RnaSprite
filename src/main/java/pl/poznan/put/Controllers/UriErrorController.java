@@ -1,4 +1,4 @@
-package pl.poznan.put.Controllers;
+package pl.poznan.put.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.web.ErrorController;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.poznan.put.Util.ConfigService;
+import pl.poznan.put.util.ConfigService;
 
 import javax.inject.Inject;
 import java.util.Arrays;

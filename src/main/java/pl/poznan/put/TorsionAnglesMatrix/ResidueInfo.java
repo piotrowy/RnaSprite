@@ -1,4 +1,4 @@
-package pl.poznan.put.TorsionAnglesMatrix;
+package pl.poznan.put.torsionanglesmatrix;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

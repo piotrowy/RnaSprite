@@ -1,7 +1,7 @@
-package pl.poznan.put.Exceptions;
+package pl.poznan.put.exceptions;
 
 public class MalformedSessionIdException extends CustomException {
-    public MalformedSessionIdException(String message) {
+    public MalformedSessionIdException(final String message) {
         super(message);
     }
 }

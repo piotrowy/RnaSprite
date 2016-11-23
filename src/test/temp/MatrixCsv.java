@@ -1,7 +1,7 @@
 package pl.poznan.put;
 
 import com.csvreader.CsvWriter;
-import pl.poznan.put.RnaCommons.AtomNamesList;
+import pl.poznan.put.rnacommons.AtomNamesList;
 
 import java.io.File;
 import java.io.FileWriter;

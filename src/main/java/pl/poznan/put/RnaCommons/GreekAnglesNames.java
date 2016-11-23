@@ -1,8 +1,7 @@
-package pl.poznan.put.RnaCommons;
+package pl.poznan.put.rnacommons;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import pl.poznan.put.constant.Unicode;
 import pl.poznan.put.rna.torsion.RNATorsionAngleType;

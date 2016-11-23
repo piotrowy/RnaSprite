@@ -1,4 +1,4 @@
-package pl.poznan.put.Mail;
+package pl.poznan.put.mail;
 
 import lombok.Data;
 
@@ -14,7 +14,7 @@ public class MailContent {
     private String text;
     private List<File> attachments;
 
-    public String formatText(final String from) {
+    public final String formatText(final String from) {
         return String.format("Dear {},\n\t{}\n{}", this.dear, this.text, from);
     }
 }

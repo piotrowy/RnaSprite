@@ -1,14 +1,13 @@
-package pl.poznan.put.RnaCommons;
+package pl.poznan.put.rnacommons;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import pl.poznan.put.Util.ConfigService;
+import pl.poznan.put.util.ConfigService;
 
 import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;

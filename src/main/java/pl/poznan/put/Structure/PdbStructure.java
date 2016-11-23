@@ -1,4 +1,4 @@
-package pl.poznan.put.Structure;
+package pl.poznan.put.structure;
 
 import lombok.Data;
 import pl.poznan.put.pdb.PdbParsingException;

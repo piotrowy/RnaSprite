@@ -1,7 +1,6 @@
-package pl.poznan.put.Util;
+package pl.poznan.put.util;
 
 import lombok.Getter;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

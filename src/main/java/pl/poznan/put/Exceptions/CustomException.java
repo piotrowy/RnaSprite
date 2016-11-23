@@ -1,7 +1,7 @@
-package pl.poznan.put.Exceptions;
+package pl.poznan.put.exceptions;
 
 public class CustomException extends RuntimeException {
-    public CustomException(String message) {
+    public CustomException(final String message) {
         super(message);
     }
 }
