@@ -1,65 +1,51 @@
 package pl.poznan.put.torsionanglesmatrix;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import pl.poznan.put.pdb.analysis.PdbChain;
 import pl.poznan.put.pdb.analysis.PdbCompactFragment;
 import pl.poznan.put.pdb.analysis.PdbModel;
 import pl.poznan.put.pdb.analysis.PdbResidue;
 import pl.poznan.put.rna.torsion.RNATorsionAngleType;
-import pl.poznan.put.rnacommons.GreekAnglesNames;
 import pl.poznan.put.rnamatrix.Calculation;
 import pl.poznan.put.rnamatrix.Matrix;
-import pl.poznan.put.rnamatrix.SpecificCalculation;
 import pl.poznan.put.torsion.MasterTorsionAngleType;
 
 import javax.inject.Inject;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.List;
+import javax.inject.Named;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Component
+@Named
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class TorsionAnglesMatrixCalculation implements SpecificCalculation<ResidueInfo, String, AngleData, RNATorsionAngleType> {
-
-    private final GreekAnglesNames greekAnglesNames;
-    private final Matrix<ResidueInfo, String, AngleData> matrix;
+public class TorsionAnglesMatrixCalculation implements Calculation<ResidueInfo, String, AngleData, Set<RNATorsionAngleType>> {
 
     private static final String INVALID = "invalid";
     private static final String EMPTY = "-";
-
-    private static final DecimalFormat DECIMAL_FORMAT_2 = new DecimalFormat("#,###,###,##0.00");
-
-    @Override
-    public final Matrix<ResidueInfo, String, AngleData> calculateMatrix(final PdbModel model) {
-        model.getChains().stream().forEach(chain -> parseChain(chain, Arrays.asList(RNATorsionAngleType.values())));
-        this.xLabelsAdd();
-        this.matrix.setName(model.getIdCode() + model.getModelNumber());
-        return this.matrix;
-    }
+    private final Matrix<ResidueInfo, String, AngleData> matrix;
 
     @Override
-    public final Matrix<ResidueInfo, String, AngleData> calculateSpecificMatrix(final PdbModel model, final RNATorsionAngleType... args) {
-        model.getChains().stream().forEach(chain -> parseChain(chain, Arrays.asList(args)));
-        this.xLabelsAdd();
-
-        return this.matrix;
+    public Matrix<ResidueInfo, String, AngleData> calculateMatrix(PdbModel model, Optional<Set<RNATorsionAngleType>> anglesOpt) {
+        Set<RNATorsionAngleType> angles = getAnglesSet(anglesOpt);
+        model.getChains().stream().forEach(chain -> parseChain(chain, angles));
+        xLabelsAdd(angles);
+        setName(model);
+        return matrix;
     }
 
-    private void parseChain(final PdbChain chain, final List<RNATorsionAngleType> torsionAngleTypeList) {
+    private void parseChain(final PdbChain chain, final Set<RNATorsionAngleType> angles) {
         PdbCompactFragment fragment = Calculation.pdbChainToCompactFragment(chain);
         fragment.getResidues().stream().forEach(residue -> {
             this.yLabelAdd(residue);
-            parseResidue(fragment, residue, torsionAngleTypeList);
+            parseResidue(fragment, residue, angles);
         });
     }
 
-    private void parseResidue(final PdbCompactFragment fragment, final PdbResidue residue, final List<RNATorsionAngleType> torsionAngleTypeList) {
+    private void parseResidue(final PdbCompactFragment fragment, final PdbResidue residue, final Set<RNATorsionAngleType> angles) {
         this.matrix.getData()
                 .add(Stream.of(RNATorsionAngleType.values())
-                        .flatMap(Stream::of).filter(torsionAngleTypeList::contains)
+                        .flatMap(Stream::of).filter(angles::contains)
                         .map(angle -> setAngleValue(fragment, residue, angle))
                         .collect(Collectors.toList()));
     }
@@ -76,8 +62,19 @@ public class TorsionAnglesMatrixCalculation implements SpecificCalculation<Resid
         }
     }
 
-    private void xLabelsAdd() {
-        this.matrix.setXLabels(this.greekAnglesNames.getGreekAngleNamesList());
+    private Set<RNATorsionAngleType> getAnglesSet(Optional<Set<RNATorsionAngleType>> angles) {
+        return angles.map(set -> set)
+                .orElse(Stream.of(RNATorsionAngleType.values())
+                        .flatMap(Stream::of)
+                        .collect(Collectors.toSet()));
+    }
+
+    private void setName(PdbModel model) {
+        matrix.setName(model.getIdCode() + model.getModelNumber());
+    }
+
+    private void xLabelsAdd(Set<RNATorsionAngleType> angles) {
+        this.matrix.setXLabels(angles.stream().map(RNATorsionAngleType::getShortDisplayName).collect(Collectors.toList()));
     }
 
     private void yLabelAdd(final PdbResidue residue) {

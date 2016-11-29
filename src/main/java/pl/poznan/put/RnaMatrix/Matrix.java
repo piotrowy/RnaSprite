@@ -3,15 +3,15 @@ package pl.poznan.put.rnamatrix;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @Scope("prototype")
-@Component
+@Named
 public class Matrix<T, U, V> {
 
     private String name;

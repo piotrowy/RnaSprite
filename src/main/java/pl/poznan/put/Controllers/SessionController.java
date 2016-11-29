@@ -9,14 +9,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.poznan.put.exceptions.PdbDoesNotExistException;
+import pl.poznan.put.pdb.PdbParsingException;
 import pl.poznan.put.rnacommons.PdbIdsManager;
 import pl.poznan.put.session.SessionManager;
 import pl.poznan.put.structure.PdbStructure;
-import pl.poznan.put.pdb.PdbParsingException;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -35,15 +38,25 @@ public class SessionController {
         return new ResponseEntity<>(this.getSession(id), HttpStatus.OK);
     }
 
+    @RequestMapping("refresh-sessions/{ids}")//  http://localhost:8080/refresh-sessions/1,2,3,4,5,6
+    public final HttpEntity refreshSessions(@PathVariable("ids") final String[] ids) throws IOException, PdbParsingException {
+        refresh(Arrays.asList(ids).stream().map(UUID::fromString).collect(Collectors.toList()));
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    private void refresh(List<UUID> ids) {
+        ids.stream().forEach(sessionManager::refreshSession);
+    }
+
     private void  validatePdbId(final String id) {
         if (!this.checkPdbId(id)) {
-            log.debug("Id {} is not found in the request", id);
+            log.info("Id {} is not found in the request", id);
             throw new PdbDoesNotExistException(id);
         }
     }
 
     private boolean checkPdbId(final String id) {
-        return id.length() == PDB_ID_LENGTH && pdbIdsManager.isPdbIdExists(id);
+        return id.length() == PDB_ID_LENGTH && pdbIdsManager.doesPdbIdExist(id);
     }
 
     private UUID getSession(final String id) throws IOException, PdbParsingException {

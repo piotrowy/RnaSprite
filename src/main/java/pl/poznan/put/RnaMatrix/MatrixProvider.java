@@ -8,7 +8,7 @@ import pl.poznan.put.structure.PdbStructure;
 import java.util.List;
 
 @RequiredArgsConstructor
-public abstract class MatrixProvider<T, U, V> implements MatrixFactory<List<Matrix<T, U, V>>, PdbStructure> {
+public abstract class MatrixProvider<T, U, V, X> implements MatrixFactory<T, U, V, X> {
 
     /**
      * It is a variable which stores reference to object which
@@ -17,5 +17,5 @@ public abstract class MatrixProvider<T, U, V> implements MatrixFactory<List<Matr
      */
     @Getter
     @Setter
-    private Calculation<T, U, V> calculationMethod;
+    private Calculation<T, U, V, X> calculationMethod;
 }

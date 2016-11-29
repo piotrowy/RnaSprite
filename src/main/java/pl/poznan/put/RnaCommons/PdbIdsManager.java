@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import pl.poznan.put.util.ConfigService;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.Collections;
@@ -19,21 +19,19 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
-@Component
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@Named
 public class PdbIdsManager {
 
     private static final String PDB_TAG = "PDB";
-
     private static final String ITEM_NAME = "structureId";
-
-    private final ConfigService configService;
+    private static final String CURRENT_URL = "http://www.rcsb.org/pdb/rest/getCurrent";
+    private static final String OBSOLETE_URL = "http://www.rcsb.org/pdb/rest/getObsolete";
 
     /**
      * pdbIdList is a list of all pdb ids (obsolete and current) downloaded from http://www.rcsb.org.
      */
     @Getter
-    private Set<String> pdbIdSet;
+    private Set<String> pdbIdSet = allPdbIds();
 
     /**
      * @param uri where pdb sturctures are stored.
@@ -59,7 +57,7 @@ public class PdbIdsManager {
      * @param pdbId - id of pdb file.
      * @return true if pdb id exists in pdbSet, in other case @return is false.
      */
-    public final Boolean isPdbIdExists(final String pdbId) {
+    public final Boolean doesPdbIdExist(final String pdbId) {
         return pdbIdSet.contains(pdbId.toUpperCase());
     }
 
@@ -67,14 +65,14 @@ public class PdbIdsManager {
      * @return all current, parsed pdb ids.
      */
     public final Set<String> currentPdbIds() {
-        return getPdbIdsFromUri(this.configService.getCurrentPdbIdsSetUrl());
+        return getPdbIdsFromUri(CURRENT_URL);
     }
 
     /**
      * @return all obsolete, parsed pdb ids.
      */
     public final Set<String> obsoletePdbIds() {
-        return getPdbIdsFromUri(this.configService.getObsoletePdbIdsSetUrl());
+        return getPdbIdsFromUri(OBSOLETE_URL);
     }
 
     /**

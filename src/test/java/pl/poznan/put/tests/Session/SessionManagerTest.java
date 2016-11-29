@@ -1,14 +1,8 @@
-package pl.poznan.put.tests.Session;
+package pl.poznan.put.tests.session;
 
-import org.junit.Assert;
 import org.junit.Test;
-import pl.poznan.put.session.SessionManager;
-import pl.poznan.put.structure.PdbStructure;
-import pl.poznan.put.util.ConfigService;
-import pl.poznan.put.pdb.PdbParsingException;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class SessionManagerTest {
 
@@ -25,7 +19,7 @@ public class SessionManagerTest {
 //        }
 //        UUID id  = sessionManager.createSession(structure);
 //        Assert.assertNotNull("Shouldn't be null", id);
-//        Assert.assertEquals("Id string length should be equal to 36", 36, id.toString().length());
+//        Assert.assertEquals("UUID string length should be equal to 36", 36, id.toString().length());
 //        Assert.assertNotNull("SessionData shouldn't be null in sessionMap", SessionManager.getSessionMap().get(id));
     }
 }

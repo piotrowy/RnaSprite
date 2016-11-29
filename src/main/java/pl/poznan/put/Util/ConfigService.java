@@ -1,12 +1,12 @@
 package pl.poznan.put.util;
 
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
+import javax.inject.Named;
 import java.io.IOException;
 import java.util.Properties;
 
-@Component
+@Named
 public class ConfigService {
 
     /**

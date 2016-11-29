@@ -2,10 +2,10 @@ package pl.poznan.put.rnacommons;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 import pl.poznan.put.constant.Unicode;
 import pl.poznan.put.rna.torsion.RNATorsionAngleType;
 
+import javax.inject.Named;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Component
+@Named
 public class GreekAnglesNames {
 
     /**

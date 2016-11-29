@@ -4,12 +4,14 @@ import pl.poznan.put.pdb.analysis.PdbChain;
 import pl.poznan.put.pdb.analysis.PdbCompactFragment;
 import pl.poznan.put.pdb.analysis.PdbModel;
 
-public interface Calculation<T, U, V> {
+import java.text.DecimalFormat;
+import java.util.Optional;
 
-    /**
-     * @return some derivative matrix.
-     */
-    Matrix<T, U, V> calculateMatrix(final PdbModel model);
+public interface Calculation<T, U, V, X> {
+
+    Matrix<T, U, V> calculateMatrix(final PdbModel model, Optional<X> arg);
+
+    DecimalFormat DECIMAL_FORMAT_2 = new DecimalFormat("#,###,###,##0.00");
 
     static PdbCompactFragment pdbChainToCompactFragment(PdbChain chain) {
         return new PdbCompactFragment(String.valueOf(chain.getIdentifier()), chain.getResidues());

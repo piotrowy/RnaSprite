@@ -8,18 +8,19 @@ import pl.poznan.put.torsionanglesmatrix.AngleData;
 import pl.poznan.put.torsionanglesmatrix.ResidueInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DistanceMatrixProvider extends MatrixProvider<ResidueInfo, String, AngleData> {
+public class DistanceMatrixProvider extends MatrixProvider<String, String, String, String> {
 
     public DistanceMatrixProvider(final DistanceMatrixCalculation distanceMatrixCalculation) {
         super.setCalculationMethod(distanceMatrixCalculation);
     }
 
     @Override
-    public List<Matrix<ResidueInfo, String, AngleData>> get(PdbStructure structure) {
+    public List<Matrix<String, String, String>> get(PdbStructure structure, Optional<String> args) {
         if (!structure.getModels().isEmpty()) {
-            return structure.getModels().stream().map(model -> super.getCalculationMethod().calculateMatrix(model)).collect(Collectors.toList());
+            return structure.getModels().stream().map(model -> super.getCalculationMethod().calculateMatrix(model, args)).collect(Collectors.toList());
         }
         throw new StructureIsEmptyException(structure.toString());
     }

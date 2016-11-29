@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-
 public class UriErrorController implements ErrorController {
 
     private final ConfigService configService;

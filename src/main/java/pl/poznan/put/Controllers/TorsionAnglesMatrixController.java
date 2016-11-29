@@ -17,6 +17,7 @@ import pl.poznan.put.torsionanglesmatrix.TorsionAnglesMatrixProvider;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -34,7 +35,7 @@ public class TorsionAnglesMatrixController {
         }
         SessionData sessionData = this.sessionManager.getSession(UUID.fromString(sessionId));
         if (sessionData.getTorsionAngles() == null) {
-            sessionData.setTorsionAngles(this.torsionAnglesMatrixProvider.get(sessionData.getStructure()));
+            sessionData.setTorsionAngles(this.torsionAnglesMatrixProvider.get(sessionData.getStructure(), Optional.empty()));
         }
         return new ResponseEntity<>(sessionData.getTorsionAngles(), HttpStatus.OK);
     }

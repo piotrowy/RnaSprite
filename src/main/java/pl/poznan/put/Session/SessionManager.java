@@ -3,11 +3,11 @@ package pl.poznan.put.session;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import pl.poznan.put.structure.PdbStructure;
 import pl.poznan.put.util.ConfigService;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component
+@Named
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public final class SessionManager {
 
@@ -52,6 +52,10 @@ public final class SessionManager {
         UUID id = UUID.randomUUID();
         sessionMap.put(id, SessionData.builder().structure(structure).lastUseTime(new Date()).build());
         return id;
+    }
+
+    public void refreshSession(final UUID id) {
+        sessionMap.get(id).setLastUseTime(new Date());
     }
 
     public static Map<UUID, SessionData> getSessionMap() {

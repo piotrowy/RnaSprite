@@ -1,36 +1,38 @@
 package pl.poznan.put.rnamatrix.csv;
 
 import com.opencsv.CSVWriter;
-import jersey.repackaged.com.google.common.primitives.Ints;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import pl.poznan.put.rnamatrix.Matrix;
 
+import javax.inject.Named;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
 @Data
+@Named
 public class CsvMatrix {
 
     private static final char DEFAULT_SEPARATOR = ',';
 
     public static File writeMatricesToCsv(List<Matrix> matrices) {
-        List<File> files = matrices.stream().map(CsvMatrix::writeMatrixToCsv).collect(Collectors.toList());
+        //List<File> files = matrices.stream().map(CsvMatrix::writeMatrixToCsv).collect(Collectors.toList());
         return null;
     }
 
-    private static File writeMatrixToCsv(Matrix matrix) {
+    private static Optional<File> writeMatrixToCsv(Matrix matrix) {
+        Optional<File> optFile;
         try {
-            CSVWriter writer = new CSVWriter(new FileWriter(File.createTempFile(matrix.getName(), ".csv")));
+            File file  = File.createTempFile(matrix.getName(), ".csv");
+            CSVWriter writer = new CSVWriter(new FileWriter(file));
 
             List<List<String>> xLabels = getXLabelsValues(matrix);
 
@@ -43,10 +45,12 @@ public class CsvMatrix {
 
             writer.close();
 
+            return Optional.of(file);
+
         } catch (IOException ex) {
             log.error("Zesrało się!", ex);
         }
-        return null;
+        return Optional.empty();
     }
 
     private static List<String> getShift(Matrix matrix) {
