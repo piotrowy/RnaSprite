@@ -11,7 +11,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <td> PDB name </td>
+                    <td> PDB number </td>
                     <td> Symbol </td>
                     <td> Res no. </td>
                     #foreach( $angle in $torsionAnglesType )
