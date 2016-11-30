@@ -8,7 +8,6 @@ import pl.poznan.put.structure.PdbStructure;
 
 import javax.inject.Named;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,7 @@ public class TorsionAnglesMatrixProvider extends MatrixProvider<ResidueInfo, Str
     }
 
     @Override
-    public final List<Matrix<ResidueInfo, String, AngleData>> get(final PdbStructure structure, Optional<Set<RNATorsionAngleType>> angles) {
+    public final List<Matrix<ResidueInfo, String, AngleData>> create(final PdbStructure structure, Set<RNATorsionAngleType> angles) {
         if (!structure.getModels().isEmpty()) {
             return structure.getModels().stream()
                     .map(model -> super.getCalculationMethod().calculateMatrix(model, angles))

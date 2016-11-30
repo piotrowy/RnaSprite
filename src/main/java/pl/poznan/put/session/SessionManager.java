@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -38,14 +39,13 @@ public final class SessionManager {
                 .forEach(map -> sessionMap.remove(map.getKey()));
     }
 
-    public SessionData getSession(final UUID id) {
-        SessionData sessionData = sessionMap.get(id);
-        sessionData.setLastUseTime(new Date());
-        return sessionData;
-    }
-
-    public Boolean hasSession(final UUID id) {
-        return sessionMap.containsKey(id);
+    public Optional<SessionData> getSession(final UUID id) {
+        SessionData sessionData = null;
+        if (sessionMap.containsKey(id)) {
+            sessionData = sessionMap.get(id);
+            sessionData.setLastUseTime(new Date());
+        }
+        return Optional.of(sessionData);
     }
 
     public UUID createSession(final PdbStructure structure) {
@@ -55,7 +55,7 @@ public final class SessionManager {
     }
 
     public void refreshSession(final UUID id) {
-        sessionMap.get(id).setLastUseTime(new Date());
+        getSession(id).ifPresent(sessionData -> sessionData.setLastUseTime(new Date()));
     }
 
     public static Map<UUID, SessionData> getSessionMap() {

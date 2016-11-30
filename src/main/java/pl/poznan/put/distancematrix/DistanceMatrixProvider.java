@@ -4,11 +4,8 @@ import pl.poznan.put.exceptions.StructureIsEmptyException;
 import pl.poznan.put.rnamatrix.Matrix;
 import pl.poznan.put.rnamatrix.MatrixProvider;
 import pl.poznan.put.structure.PdbStructure;
-import pl.poznan.put.torsionanglesmatrix.AngleData;
-import pl.poznan.put.torsionanglesmatrix.ResidueInfo;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DistanceMatrixProvider extends MatrixProvider<String, String, String, String> {
@@ -18,10 +15,11 @@ public class DistanceMatrixProvider extends MatrixProvider<String, String, Strin
     }
 
     @Override
-    public List<Matrix<String, String, String>> get(PdbStructure structure, Optional<String> args) {
+    public List<Matrix<String, String, String>> create(PdbStructure structure, String args) {
         if (!structure.getModels().isEmpty()) {
             return structure.getModels().stream().map(model -> super.getCalculationMethod().calculateMatrix(model, args)).collect(Collectors.toList());
         }
         throw new StructureIsEmptyException(structure.toString());
     }
 }
+

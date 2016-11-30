@@ -8,17 +8,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.poznan.put.exceptions.MalformedSessionIdException;
+import pl.poznan.put.rna.torsion.RNATorsionAngleType;
 import pl.poznan.put.rnamatrix.Matrix;
-import pl.poznan.put.session.SessionData;
 import pl.poznan.put.session.SessionManager;
 import pl.poznan.put.torsionanglesmatrix.AngleData;
 import pl.poznan.put.torsionanglesmatrix.ResidueInfo;
+import pl.poznan.put.torsionanglesmatrix.TorsionAnglesMatrixFilter;
 import pl.poznan.put.torsionanglesmatrix.TorsionAnglesMatrixProvider;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/matrix")
@@ -28,32 +32,34 @@ public class TorsionAnglesMatrixController {
     private final TorsionAnglesMatrixProvider torsionAnglesMatrixProvider;
     private final SessionManager sessionManager;
 
+    @SuppressWarnings("unchecked")
     @RequestMapping("/torsion-angles/{sessionId}")
     public final HttpEntity<List<Matrix<ResidueInfo, String, AngleData>>> torsionAnglesMatrix(@PathVariable("sessionId") final String sessionId) {
-        if (!this.sessionManager.hasSession(UUID.fromString(sessionId))) {
-            throw new MalformedSessionIdException(sessionId);
-        }
-        SessionData sessionData = this.sessionManager.getSession(UUID.fromString(sessionId));
-        if (sessionData.getTorsionAngles() == null) {
-            sessionData.setTorsionAngles(this.torsionAnglesMatrixProvider.get(sessionData.getStructure(), Optional.empty()));
-        }
-        return new ResponseEntity<>(sessionData.getTorsionAngles(), HttpStatus.OK);
+        return sessionManager.getSession(UUID.fromString(sessionId)).map(sessionData -> {
+            if (!sessionData.getTorsionAngles().isPresent()) {
+                sessionData.setTorsionAngles(torsionAnglesMatrixProvider.create(sessionData.getStructure(), Collections.EMPTY_SET));
+            }
+            return new ResponseEntity<>(sessionData.getTorsionAngles().get(), HttpStatus.OK);
+        }).orElseThrow(() -> new MalformedSessionIdException(sessionId));
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping("/torsion-angles/{sessionId}/{angles}")
     public final HttpEntity<List<Matrix<ResidueInfo, String, AngleData>>> torsionAnglesMatrix(@PathVariable("sessionId") final String sessionId,
-                                                                                              @PathVariable("angles") final String angles) {
-        return null;
+                                                                                              @PathVariable("angles") final String... angles) {
+        return sessionManager.getSession(UUID.fromString(sessionId)).map(sessionData -> {
+            if (sessionData.getTorsionAngles() == null) {
+                sessionData.setTorsionAngles(torsionAnglesMatrixProvider.create(sessionData.getStructure(), Collections.EMPTY_SET));
+            }
+            return new ResponseEntity<>(sessionData.getTorsionAngles().get().stream()
+                    .map(matrix -> TorsionAnglesMatrixFilter.builder().matrix(matrix).build().filter(anglesMapper(Arrays.asList(angles))))
+                    .collect(Collectors.toList()), HttpStatus.OK);
+        }).orElseThrow(() -> new MalformedSessionIdException(sessionId));
     }
 
-//    private final HttpEntity<List<Matrix<ResidueInfo, String, AngleData>>> validateAndGetetMatrix() {
-//        if (!this.sessionManager.hasSession(UUID.fromString(sessionId))) {
-//            throw new MalformedSessionIdException(sessionId);
-//        }
-//        SessionData sessionData = this.sessionManager.getSession(UUID.fromString(sessionId));
-//        if (sessionData.getTorsionAngles() == null) {
-//            sessionData.setTorsionAngles(this.torsionAnglesMatrixProvider.get(sessionData.getStructure()));
-//        }
-//        return new ResponseEntity<>(sessionData.getTorsionAngles(), HttpStatus.OK);
-//    }
+    private Set<RNATorsionAngleType> anglesMapper(List<String> angles) {
+        return angles.stream()
+                .map(angle -> RNATorsionAngleType.valueOf(angle.toUpperCase()))
+                .collect(Collectors.toSet());
+    }
 }

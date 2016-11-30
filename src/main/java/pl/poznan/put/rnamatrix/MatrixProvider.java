@@ -3,9 +3,6 @@ package pl.poznan.put.rnamatrix;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import pl.poznan.put.structure.PdbStructure;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public abstract class MatrixProvider<T, U, V, X> implements MatrixFactory<T, U, V, X> {

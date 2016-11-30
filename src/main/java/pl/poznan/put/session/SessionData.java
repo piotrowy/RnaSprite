@@ -10,6 +10,7 @@ import pl.poznan.put.torsionanglesmatrix.ResidueInfo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -23,4 +24,12 @@ public class SessionData {
     private List<Matrix<ResidueInfo, String, AngleData>> torsionAngles;
 
     private List<Matrix<ResidueInfo, String, AngleData>> distances;
+
+    public Optional<List<Matrix<ResidueInfo, String, AngleData>>> getTorsionAngles() {
+        return Optional.ofNullable(torsionAngles);
+    }
+
+    public Optional<List<Matrix<ResidueInfo, String, AngleData>>> getDistances() {
+        return Optional.ofNullable(distances);
+    }
 }

@@ -12,7 +12,6 @@ import pl.poznan.put.torsion.MasterTorsionAngleType;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,12 +22,18 @@ public class TorsionAnglesMatrixCalculation implements Calculation<ResidueInfo, 
 
     private static final String INVALID = "invalid";
     private static final String EMPTY = "-";
+    private static final String SEPARATOR = "#";
     private final Matrix<ResidueInfo, String, AngleData> matrix;
 
     @Override
-    public Matrix<ResidueInfo, String, AngleData> calculateMatrix(PdbModel model, Optional<Set<RNATorsionAngleType>> anglesOpt) {
-        Set<RNATorsionAngleType> angles = getAnglesSet(anglesOpt);
-        model.getChains().stream().forEach(chain -> parseChain(chain, angles));
+    public Matrix<ResidueInfo, String, AngleData> calculateMatrix(final PdbModel model, final Set<RNATorsionAngleType> angles) {
+        if (angles  == null || angles.isEmpty()) {
+            model.getChains().stream().forEach(chain -> parseChain(chain, Stream.of(RNATorsionAngleType.values())
+                    .flatMap(Stream::of)
+                    .collect(Collectors.toSet())));
+        } else {
+            model.getChains().stream().forEach(chain -> parseChain(chain, angles));
+        }
         xLabelsAdd(angles);
         setName(model);
         return matrix;
@@ -62,15 +67,8 @@ public class TorsionAnglesMatrixCalculation implements Calculation<ResidueInfo, 
         }
     }
 
-    private Set<RNATorsionAngleType> getAnglesSet(Optional<Set<RNATorsionAngleType>> angles) {
-        return angles.map(set -> set)
-                .orElse(Stream.of(RNATorsionAngleType.values())
-                        .flatMap(Stream::of)
-                        .collect(Collectors.toSet()));
-    }
-
     private void setName(PdbModel model) {
-        matrix.setName(model.getIdCode() + model.getModelNumber());
+        matrix.setName(model.getIdCode() + SEPARATOR + model.getModelNumber());
     }
 
     private void xLabelsAdd(Set<RNATorsionAngleType> angles) {

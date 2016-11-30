@@ -9,9 +9,7 @@ import pl.poznan.put.rnamatrix.Matrix;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -48,7 +46,7 @@ public class DistanceMatrixCalculation implements Calculation<String, String, St
     }
 
     @Override
-    public Matrix<String, String, String> calculateMatrix(PdbModel model, Optional<String> arg) {
+    public Matrix<String, String, String> calculateMatrix(PdbModel model, String arg) {
         return null;
     }
 }

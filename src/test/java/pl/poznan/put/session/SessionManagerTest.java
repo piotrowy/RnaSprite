@@ -20,6 +20,6 @@ public class SessionManagerTest {
 //        UUID id  = sessionManager.createSession(structure);
 //        Assert.assertNotNull("Shouldn't be null", id);
 //        Assert.assertEquals("UUID string length should be equal to 36", 36, id.toString().length());
-//        Assert.assertNotNull("SessionData shouldn't be null in sessionMap", SessionManager.getSessionMap().get(id));
+//        Assert.assertNotNull("SessionData shouldn't be null in sessionMap", SessionManager.getSessionMap().create(id));
     }
 }
