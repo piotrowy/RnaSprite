@@ -14,7 +14,7 @@ import pl.poznan.put.pdb.PdbAtomLine;
 import pl.poznan.put.pdb.analysis.PdbChain;
 import pl.poznan.put.pdb.analysis.PdbModel;
 import pl.poznan.put.pdb.analysis.PdbResidue;
-import pl.poznan.put.util.exceptions.InvalidArgumentException;
+import pl.poznan.put.exceptions.InvalidArgumentException;
 
 import java.util.List;
 import java.util.Optional;

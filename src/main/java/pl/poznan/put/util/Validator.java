@@ -1,6 +1,6 @@
 package pl.poznan.put.util;
 
-import pl.poznan.put.util.exceptions.InvalidArgumentException;
+import pl.poznan.put.exceptions.InvalidArgumentException;
 
 @FunctionalInterface
 public interface Validator<T, U extends InvalidArgumentException> {

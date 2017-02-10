@@ -6,7 +6,7 @@ import pl.poznan.put.core.session.caches.StructureCacheManager;
 import pl.poznan.put.core.structure.PdbStructure;
 import pl.poznan.put.tables.daos.PdbIdSessionIdDao;
 import pl.poznan.put.tables.pojos.PdbIdSessionId;
-import pl.poznan.put.util.exceptions.InvalidArgumentException;
+import pl.poznan.put.exceptions.InvalidArgumentException;
 
 import java.util.UUID;
 import javax.inject.Inject;

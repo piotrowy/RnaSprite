@@ -18,7 +18,7 @@ import pl.poznan.put.core.session.caches.EmptyCacheException;
 import pl.poznan.put.core.session.caches.GenericMatrixCacheManager;
 import pl.poznan.put.core.structure.EmptyStructureException;
 import pl.poznan.put.core.structure.PdbStructure;
-import pl.poznan.put.util.exceptions.InvalidArgumentException;
+import pl.poznan.put.exceptions.InvalidArgumentException;
 
 import java.util.UUID;
 import javax.inject.Inject;

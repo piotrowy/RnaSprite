@@ -6,7 +6,7 @@ import org.jooq.DSLContext;
 import org.springframework.core.env.Environment;
 import pl.poznan.put.core.structure.PdbStructure;
 import pl.poznan.put.tables.daos.PdbIdSessionIdDao;
-import pl.poznan.put.util.exceptions.InvalidArgumentException;
+import pl.poznan.put.exceptions.InvalidArgumentException;
 
 import java.util.Map;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package pl.poznan.put.util.exceptions;
+package pl.poznan.put.exceptions;
 
 import lombok.Builder;
 
