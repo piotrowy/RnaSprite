@@ -3,6 +3,7 @@ package pl.poznan.put.core.session.pdbid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DuplicateKeyException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import pl.poznan.put.tables.daos.PdbIdsDao;
@@ -66,13 +67,15 @@ public class PdbIdsManager {
         if (pdbIdsDao.count() == 0) {
             pdbIdsDao.insert(pdbIds);
         } else {
-            insertNotExisting(pdbIds);
+            pdbIds.forEach(pdbId -> {
+                try {
+                    pdbIdsDao.insert(pdbId);
+                } catch (DuplicateKeyException ex) {
+                    log.debug("Pdb key already exists. {}, {}", pdbId, ex);
+                }
+            });
         }
         log.info("PDB IDS CRON - END");
-    }
-
-    private void insertNotExisting(Set<PdbIds> pdbIds) {
-        pdbIdsDao.insert(pdbIds.stream().filter(this::notExists).collect(Collectors.toSet()));
     }
 
     private Set<String> getPdbIdsFromUri(final String uri) {
@@ -89,10 +92,6 @@ public class PdbIdsManager {
             log.error("Downloading pdb ids failed. {}", ex);
         }
         return Collections.emptySet();
-    }
-
-    private boolean notExists(final PdbIds pdbId) {
-        return !pdbIdsDao.exists(pdbId);
     }
 
     private Set<String> currentPdbIds() {

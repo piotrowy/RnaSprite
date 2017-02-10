@@ -15,6 +15,7 @@ import pl.poznan.put.core.rnamatrix.specification.ModelSpecification;
 import pl.poznan.put.core.rnamatrix.specification.StructureSpecification;
 import pl.poznan.put.core.session.SessionManager;
 import pl.poznan.put.core.session.SessionValidator;
+import pl.poznan.put.core.session.caches.EmptyCacheException;
 import pl.poznan.put.core.session.caches.GenericMatrixCacheManager;
 import pl.poznan.put.core.structure.EmptyStructureException;
 import pl.poznan.put.core.structure.PdbStructure;
@@ -57,7 +58,7 @@ public class TorsionAnglesMatrixController {
         }
     }
 
-    private void setStructureInSession(UUID sessionId, StructureSpecification<Set<String>> spec) throws EmptyStructureException {
+    private void setStructureInSession(UUID sessionId, StructureSpecification<Set<String>> spec) throws EmptyStructureException, EmptyCacheException {
         if (cacheManager.getMatrixCache(sessionId) == null) {
             PdbStructure structure = sessionManager.getStructureCache(sessionId);
             cacheManager.createMatrixCache(torsionAnglesMatrixProvider.create(structure, spec), sessionId);
@@ -83,6 +84,4 @@ public class TorsionAnglesMatrixController {
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> new HashSet(singletonList(ALL)))))
                 .build();
     }
-
-
 }

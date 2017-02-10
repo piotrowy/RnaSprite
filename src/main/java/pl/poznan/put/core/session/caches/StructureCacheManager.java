@@ -55,8 +55,11 @@ public class StructureCacheManager {
         log.info("STRUCTURES CRON - END");
     }
 
-    public PdbStructure getStructure(String pdbId) {
-        return structureCacheMap.get(pdbId);
+    public PdbStructure getStructure(String pdbId) throws EmptyCacheException {
+        if (structureCacheMap.containsKey(pdbId)) {
+            return structureCacheMap.get(pdbId);
+        }
+        throw new EmptyCacheException("Unable to find structure.");
     }
 
     public void createStructureRecord(String pdbId) throws InvalidArgumentException {

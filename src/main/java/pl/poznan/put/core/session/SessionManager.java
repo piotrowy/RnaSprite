@@ -1,6 +1,7 @@
 package pl.poznan.put.core.session;
 
 import lombok.RequiredArgsConstructor;
+import pl.poznan.put.core.session.caches.EmptyCacheException;
 import pl.poznan.put.core.session.caches.StructureCacheManager;
 import pl.poznan.put.core.structure.PdbStructure;
 import pl.poznan.put.tables.daos.PdbIdSessionIdDao;
@@ -29,7 +30,7 @@ public class SessionManager {
         return sessionId;
     }
 
-    public PdbStructure getStructureCache(UUID sessionId) {
+    public PdbStructure getStructureCache(UUID sessionId) throws EmptyCacheException {
         return structureCacheManager.getStructure(pdbIdSessionIdDao.fetchOneBySessionId(sessionId).getPdbId());
     }
 
