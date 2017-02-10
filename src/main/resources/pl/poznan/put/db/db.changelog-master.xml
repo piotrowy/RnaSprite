@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <preConditions>
+    <runningAs username="sprite"/>
+  </preConditions>
+
+  <changeSet id="1" author="piotrowy">
+    <createTable tableName="tasks">
+      <column name="id" type="serial" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="command" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="creation_date" type="TIMESTAMP WITH TIME ZONE">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createTable tableName="pdb_ids">
+      <column name="id" type="serial" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="name" type="text">
+        <constraints unique="true" nullable="false"/>
+      </column>
+      <column name="obsolete" type="boolean">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createTable tableName="pdb_id_session_id">
+      <column name="id" type="serial" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="pdb_id" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="session_id" type="UUID">
+        <constraints unique="true" nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="2" author="piotrowy">
+    <createIndex catalogName="rnasprite"
+                 indexName="idx_pdb_ids_name"
+                 schemaName="rnasprite"
+                 tableName="pdb_ids"
+                 unique="true">
+      <column name="name" type="text"/>
+    </createIndex>
+  </changeSet>
+
+</databaseChangeLog>

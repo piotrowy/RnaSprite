@@ -1,0 +1,23 @@
+postgres:
+  container_name: rnasprite-postgres
+  image: "postgres"
+  ports:
+   - 5433:5432
+  environment:
+    - POSTGRES_PASSWORD:sprite
+    - POSTGRES_USER:sprite
+  volumes:
+    - ./scripts:/scripts
+    - ./scripts/db-create.sh:/docker-entrypoint-initdb.d/db-create.sh
+
+postgres_test:
+  container_name: rnasprite-postgres-test
+  image: "postgres"
+  ports:
+   - 5434:5432
+  environment:
+    - POSTGRES_PASSWORD:sprite
+    - POSTGRES_USER:sprite
+  volumes:
+    - ./scripts:/scripts
+    - ./scripts/db-create.sh:/docker-entrypoint-initdb.d/db-create.sh
