@@ -27,7 +27,7 @@ public class ZipUtils {
 
     private static File zipIt(String directory, List<String> files) throws IOException {
         byte[] buffer = new byte[1024];
-        String zipFile = directory + "zip";
+        String zipFile = directory + ".zip";
 
 
         FileInputStream in = null;
@@ -70,7 +70,7 @@ public class ZipUtils {
         }
 
         if (node.isDirectory()) {
-            Stream.of(node.list()).forEach(fileName -> findFilesToZip(new File(fileName), directory, fileList));
+            Stream.of(node.list()).forEach(fileName -> findFilesToZip(new File(node, fileName), directory, fileList));
 
         }
 

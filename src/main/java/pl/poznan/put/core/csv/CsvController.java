@@ -39,6 +39,7 @@ public class CsvController {
                         .sessionId(UUID.fromString(sessionId))
                         .mtxStructure(manager.getMatrixCache(UUID.fromString(sessionId)).getMatrix())
                         .build()
+                        .writeIt()
                         .zipIt();
                 csvEraser.add(file);
                 return new ResponseEntity<>(new UrlResource(file.toURI()), HttpStatus.OK);

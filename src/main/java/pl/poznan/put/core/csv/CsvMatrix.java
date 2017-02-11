@@ -30,12 +30,13 @@ import java.util.stream.IntStream;
 public class CsvMatrix {
 
     private static final char DEFAULT_SEPARATOR = '\t';
+    private static final String CSV = ".csv";
 
     private MtxStructure<?, ?> mtxStructure;
     private UUID sessionId;
 
-    public void writeMatrixToCsv(String directory, String name, Matrix matrix) throws IOException {
-        File csvFile = new File(directory, name);
+    private void writeMatrixToCsv(String directory, String name, Matrix matrix) throws IOException {
+        File csvFile = new File(directory, name + CSV);
         CSVWriter writer = new CSVWriter(new FileWriter(csvFile), DEFAULT_SEPARATOR);
 
         List<String> list = new ArrayList<>();
@@ -55,13 +56,13 @@ public class CsvMatrix {
         writer.close();
     }
 
-    public boolean writeStructureToCsv() {
+    private boolean writeStructureToCsv() {
         return mtxStructure.getMtxModels()
                 .stream()
                 .allMatch(mtxModel -> mtxModel.getMtxChains()
                         .stream()
                         .allMatch(mtxChain -> {
-                            String chainDir = "/" + sessionId.toString() + "/" + mtxStructure.getName() + "-" + mtxModel.getNumber()
+                            String chainDir = sessionId.toString() + "/" + mtxStructure.getName() + "-" + mtxModel.getNumber()
                                     + "/" + mtxChain.getId();
                             boolean result = false;
                             if (new File(chainDir).mkdirs()) {
@@ -79,9 +80,14 @@ public class CsvMatrix {
                         }));
     }
 
-    public File zipIt() throws IOException {
+    CsvMatrix writeIt() throws IOException {
         writeStructureToCsv();
-        return ZipUtils.zipDirectory(sessionId.toString());
+        return this;
+    }
+
+    File zipIt() throws IOException {
+        File dir = new File(sessionId.toString());
+        return ZipUtils.zipDirectory(dir.getAbsolutePath());
     }
 
     public void sendInMail(SendMailManager sendMailManager, String receiver, String subject) throws IOException {

@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class FileUtils {
 
     public static boolean deleteStructureFolder(UUID sessionId) {
-        File directory = new File("/" + sessionId.toString());
+        File directory = new File(sessionId.toString());
         boolean result = false;
         if (directory.exists()) {
             result = delete(directory);
