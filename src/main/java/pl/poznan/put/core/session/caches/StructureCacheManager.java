@@ -8,6 +8,7 @@ import pl.poznan.put.core.structure.PdbStructure;
 import pl.poznan.put.tables.daos.PdbIdSessionIdDao;
 import pl.poznan.put.exceptions.InvalidArgumentException;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -67,6 +68,19 @@ public class StructureCacheManager {
             if (!structureCacheMap.keySet().contains(pdbId)) {
                 structureCacheMap.put(pdbId, PdbStructure.fromString(pdbId));
             }
+        } catch (Exception ex) {
+            log.error("Could not create structure. {}", ex);
+            throw new InvalidArgumentException(ex);
+        }
+    }
+
+    public String createStructureRecord(File file) throws InvalidArgumentException {
+        try {
+            PdbStructure structure = PdbStructure.fromFile(file);
+            if (!structureCacheMap.keySet().contains(structure.getName())) {
+                structureCacheMap.put(structure.getName(), structure);
+            }
+            return structure.getName();
         } catch (Exception ex) {
             log.error("Could not create structure. {}", ex);
             throw new InvalidArgumentException(ex);

@@ -2,8 +2,10 @@ package pl.poznan.put.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -36,5 +38,11 @@ public class FileUtils {
         } else {
             return file.delete();
         }
+    }
+
+    public static File convertToFile(MultipartFile multipart) throws IOException {
+        File file = new File(multipart.getOriginalFilename()  + "#" + UUID.randomUUID().toString());
+        multipart.transferTo(file);
+        return file;
     }
 }

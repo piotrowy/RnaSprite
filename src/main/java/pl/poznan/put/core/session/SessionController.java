@@ -1,16 +1,19 @@
 package pl.poznan.put.core.session;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import pl.poznan.put.core.session.pdbid.PdbIdValidator;
 import pl.poznan.put.exceptions.InvalidArgumentException;
+import pl.poznan.put.util.FileUtils;
 
 import java.util.UUID;
 import javax.inject.Inject;
@@ -28,6 +31,17 @@ public class SessionController {
         pdbIdValidator.validate(id);
         try {
             return new ResponseEntity<>(sessionManager.getSession(id), HttpStatus.OK);
+        } catch (Exception ex) {
+            log.error("Unable to parse session request. {}", ex);
+            throw new InvalidArgumentException(ex);
+        }
+    }
+
+    @PostMapping("/distances")
+    public final HttpEntity<UUID> sessionIdFromFile(@RequestParam("file") MultipartFile file)
+            throws InvalidArgumentException {
+        try {
+            return new ResponseEntity<>(sessionManager.getSession(FileUtils.convertToFile(file)), HttpStatus.OK);
         } catch (Exception ex) {
             log.error("Unable to parse session request. {}", ex);
             throw new InvalidArgumentException(ex);

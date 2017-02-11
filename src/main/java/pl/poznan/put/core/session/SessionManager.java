@@ -8,6 +8,7 @@ import pl.poznan.put.tables.daos.PdbIdSessionIdDao;
 import pl.poznan.put.tables.pojos.PdbIdSessionId;
 import pl.poznan.put.exceptions.InvalidArgumentException;
 
+import java.io.File;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,6 +28,13 @@ public class SessionManager {
         UUID sessionId = UUID.randomUUID();
         structureCacheManager.createStructureRecord(pdbId);
         pdbIdSessionIdDao.insert(new PdbIdSessionId(null, pdbId, sessionId));
+        return sessionId;
+    }
+
+    UUID getSession(final File file) throws InvalidArgumentException {
+        UUID sessionId = UUID.randomUUID();
+        String name = structureCacheManager.createStructureRecord(file);
+        pdbIdSessionIdDao.insert(new PdbIdSessionId(null, name, sessionId));
         return sessionId;
     }
 
