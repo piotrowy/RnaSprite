@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pl.poznan.put.core.mail.EmailTemplate;
-import pl.poznan.put.core.mail.SendMailManager;
+import pl.poznan.put.core.mail.SendEmailManager;
 import pl.poznan.put.core.rnamatrix.model.Matrix;
 import pl.poznan.put.core.rnamatrix.model.MtxStructure;
 import pl.poznan.put.util.FileUtils;
@@ -86,18 +86,20 @@ public class CsvMatrix {
     }
 
     File zipIt() throws IOException {
-        File dir = new File(sessionId.toString());
-        return ZipUtils.zipDirectory(dir.getAbsolutePath());
+        File file = ZipUtils.zipDirectory(new File(sessionId.toString()).getAbsolutePath());
+        FileUtils.deleteStructureFolder(sessionId);
+        return file;
     }
 
-    public void sendInMail(SendMailManager sendMailManager, String receiver, String subject) throws IOException {
+    public void sendInMail(SendEmailManager sendEmailManager, String receiver, String subject) throws IOException {
         if (writeStructureToCsv()) {
-            File zippedDir = ZipUtils.zipDirectory(sessionId.toString());
-            sendMailManager.sendMail(receiver, subject, EmailTemplate.WITH_ATTACHMENTS, zippedDir);
+            File zippedDir = ZipUtils.zipDirectory(new File(sessionId.toString()).getAbsolutePath());
+            FileUtils.deleteStructureFolder(sessionId);
+            sendEmailManager.sendMail(receiver, subject, EmailTemplate.EMAIL_TEXT, zippedDir);
             FileUtils.delete(zippedDir);
             log.debug("Sent email with matrices.");
         } else {
-            sendMailManager.sendMail(receiver, subject, EmailTemplate.ERROR_TEMPLATE, Collections.emptyList());
+            sendEmailManager.sendMail(receiver, subject, EmailTemplate.EMAIL_TEXT, Collections.emptyList());
             log.debug("Sent notification about error.");
         }
         FileUtils.deleteStructureFolder(sessionId);

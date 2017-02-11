@@ -1,19 +1,13 @@
 package pl.poznan.put.core.mail;
 
-public enum EmailTemplate {
+import lombok.Builder;
+import lombok.Data;
 
-    ERROR_TEMPLATE("./src/main/resources/mail/error.emailTemplate.vm"),
-    WITH_ATTACHMENTS("./src/main/resources/mail/withAttachments.emailTemplate.vm"),
-    WITH_ATTACHMENTS_ERRORS("./src/main/resources/mail/withAttachmentsErrors.emailTemplate.vm");
+@Data
+@Builder
+public class EmailTemplate {
 
-    private final String text;
-
-    EmailTemplate(final String text) {
-        this.text = text;
-    }
-
-    @Override
-    public String toString() {
-        return text;
-    }
+    public static final String EMAIL_TEXT = "<p>Dear Sir or Madam:</p>\n" + "<p>your computational request was managed."
+            + "Now you can open you requested files and dive into biological data world.</p>\n"
+            + "<p>Best regards\n RNAsprite team.</p>";
 }

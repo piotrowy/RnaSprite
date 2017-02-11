@@ -15,46 +15,40 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 
-import static pl.poznan.put.core.mail.EmailTemplate.ERROR_TEMPLATE;
-
 @Data
 @Slf4j
 @Named
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class SendMailManager {
+public class SendEmailManager {
 
     public static final String FROM = "mail.from";
 
     private final JavaMailSender mailSender;
-    private final EmailTemplateMaker emailTemplateMaker;
     private final Environment env;
 
-    public final void sendMail(String receiver, String subject, EmailTemplate emailTemplate, File attachment) {
-        sendMail(receiver, subject, emailTemplate, Collections.singletonList(attachment));
+    public final void sendMail(String receiver, String subject, String text, File attachment) {
+        sendMail(receiver, subject, text, Collections.singletonList(attachment));
     }
 
-    public final void sendMail(String receiver, String subject, EmailTemplate emailTemplate, List<File> attachments) {
+    public final void sendMail(String receiver, String subject, String text, List<File> attachments) {
         MimeMessagePreparator preparator = mimeMessage -> {
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
             message.setFrom(env.getProperty(FROM));
             message.setTo(receiver);
             message.setSubject(subject);
-
-            String text = emailTemplateMaker.mergeTemplateIntoEmailText(emailTemplate, receiver, Collections.emptyMap());
 
             for (File attachment : attachments) {
                 try {
                     message.addAttachment(attachment.getName(), attachment);
                 } catch (MessagingException ex) {
                     log.error("Error during adding attachment to file mail: {}", ex);
-                    text += emailTemplateMaker.mergeTemplateIntoEmailText(ERROR_TEMPLATE, receiver, Collections.emptyMap());
                     break;
                 }
             }
 
             message.setText(text, true);
         };
-        log.info("Sending email to: {}, subject: {}, text: {}", receiver, subject, emailTemplate);
+        log.info("Sending email to: {}, subject: {}, text: {}", receiver, subject, text);
         mailSender.send(preparator);
     }
 }

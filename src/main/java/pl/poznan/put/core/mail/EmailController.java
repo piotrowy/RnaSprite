@@ -22,16 +22,16 @@ import javax.inject.Inject;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class EmailController {
 
-    private final MailValidator mailValidator;
+    private final EmailValidator emailValidator;
     private final SessionValidator sessionValidator;
     private final Environment env;
-    private final SendMailManager sendMailManager;
+    private final SendEmailManager sendEmailManager;
     private final Set<GenericMatrixCacheManager> matrixCacheManagers;
 
-    @RequestMapping("mail/{sessionId}/{address}")
+    @RequestMapping("send/{sessionId}/{address:.+}")
     public final void sendMail(@PathVariable("sessionId") final String sessionId, @PathVariable("address") final String address)
             throws InvalidMailAddressException, EmptyCacheException, IOException {
-        mailValidator.validate(address);
+        emailValidator.validate(address);
         sessionValidator.validate(sessionId);
         for (GenericMatrixCacheManager manager : matrixCacheManagers) {
             if (manager.exists(UUID.fromString(sessionId))) {
@@ -39,7 +39,7 @@ public class EmailController {
                         .sessionId(UUID.fromString(sessionId))
                         .mtxStructure(manager.getMatrixCache(UUID.fromString(sessionId)).getMatrix())
                         .build()
-                        .sendInMail(sendMailManager, address, env.getProperty("email.subject"));
+                        .sendInMail(sendEmailManager, address, env.getProperty("email.subject"));
             }
         }
     }

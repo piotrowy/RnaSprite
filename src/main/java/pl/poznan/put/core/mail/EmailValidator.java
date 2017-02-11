@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.inject.Named;
 
 @Named
-public class MailValidator implements Validator<String, InvalidMailAddressException> {
+public class EmailValidator implements Validator<String, InvalidMailAddressException> {
 
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
