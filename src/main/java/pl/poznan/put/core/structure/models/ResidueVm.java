@@ -1,4 +1,4 @@
-package pl.poznan.put.core.structure;
+package pl.poznan.put.core.structure.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ public class ResidueVm {
     private String insertionCode;
     private String dotBracketRepr;
 
-    public static ResidueVm getResidueInfo(PdbResidue residue) {
+    public static ResidueVm residueInfo(PdbResidue residue) {
         return ResidueVm.builder()
                 .number(residue.getResidueNumber())
                 .oneLetterName(String.valueOf(residue.getOneLetterName()))

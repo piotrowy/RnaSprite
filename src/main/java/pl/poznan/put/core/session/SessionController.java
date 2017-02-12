@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +21,13 @@ import javax.inject.Inject;
 
 @Slf4j
 @RestController
+@RequestMapping("/session")
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class SessionController {
 
     private final PdbIdValidator pdbIdValidator;
     private final SessionManager sessionManager;
+    private final SessionValidator sessionValidator;
 
     @RequestMapping("/pdbId/{id}")
     public final HttpEntity<UUID> sessionId(@PathVariable("id") final String id) throws InvalidArgumentException {
@@ -37,7 +40,7 @@ public class SessionController {
         }
     }
 
-    @PostMapping("/distances")
+    @PostMapping("/file")
     public final HttpEntity<UUID> sessionIdFromFile(@RequestParam("file") MultipartFile file)
             throws InvalidArgumentException {
         try {

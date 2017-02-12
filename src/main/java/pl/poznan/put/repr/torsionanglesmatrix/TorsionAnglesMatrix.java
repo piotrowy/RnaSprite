@@ -5,8 +5,8 @@ import pl.poznan.put.rna.torsion.RNATorsionAngleType;
 import pl.poznan.put.core.rnacommons.RnaUtils;
 import pl.poznan.put.core.rnamatrix.filtering.MatrixFiltering;
 import pl.poznan.put.core.rnamatrix.model.Matrix;
-import pl.poznan.put.core.structure.AngleData;
-import pl.poznan.put.core.structure.ResidueVm;
+import pl.poznan.put.core.structure.models.AngleData;
+import pl.poznan.put.core.structure.models.ResidueVm;
 
 import java.util.List;
 import java.util.Set;

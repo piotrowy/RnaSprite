@@ -41,7 +41,7 @@ public class GreekAnglesNames {
         this.greekNamesMap.put("pseudophase_pucker", "P");
     }
 
-    public final List<String> getGreekAngleNamesList() {
+    final List<String> getGreekAngleNamesList() {
         return Arrays.stream(RNATorsionAngleType.values())
                 .flatMap(Stream::of)
                 .map(s -> this.greekNamesMap.get(s.toString().toLowerCase()))

@@ -1,4 +1,4 @@
-package pl.poznan.put.core.structure;
+package pl.poznan.put.util;
 
 public interface Pair<F, S> {
 

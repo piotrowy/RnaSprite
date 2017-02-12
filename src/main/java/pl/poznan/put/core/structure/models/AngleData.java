@@ -1,4 +1,4 @@
-package pl.poznan.put.core.structure;
+package pl.poznan.put.core.structure.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

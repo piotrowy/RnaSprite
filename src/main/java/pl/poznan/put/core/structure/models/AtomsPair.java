@@ -1,10 +1,10 @@
-package pl.poznan.put.core.structure;
+package pl.poznan.put.core.structure.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import pl.poznan.put.util.Pair;
 
 @Data
 @Builder

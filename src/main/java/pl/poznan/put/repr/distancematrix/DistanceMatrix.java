@@ -2,8 +2,8 @@ package pl.poznan.put.repr.distancematrix;
 
 import lombok.Builder;
 import pl.poznan.put.core.rnamatrix.model.Matrix;
-import pl.poznan.put.core.structure.AtomsPair;
-import pl.poznan.put.core.structure.ResidueVm;
+import pl.poznan.put.core.structure.models.AtomsPair;
+import pl.poznan.put.core.structure.models.ResidueVm;
 
 import java.util.List;
 

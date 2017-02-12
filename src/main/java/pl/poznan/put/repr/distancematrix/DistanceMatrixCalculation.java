@@ -2,8 +2,8 @@ package pl.poznan.put.repr.distancematrix;
 
 import pl.poznan.put.atom.AtomName;
 import pl.poznan.put.core.rnamatrix.calculation.MatrixCalculation;
-import pl.poznan.put.core.structure.AtomsPair;
-import pl.poznan.put.core.structure.ResidueVm;
+import pl.poznan.put.core.structure.models.AtomsPair;
+import pl.poznan.put.core.structure.models.ResidueVm;
 import pl.poznan.put.pdb.analysis.PdbChain;
 import pl.poznan.put.pdb.analysis.PdbResidue;
 
@@ -18,7 +18,7 @@ public class DistanceMatrixCalculation implements MatrixCalculation<DistanceMatr
     private DistanceMatrix calculateDistancesForAtoms(AtomsPair atomsPair, List<PdbResidue> residues) {
         List<ResidueVm> residueVms = residues
                 .stream()
-                .map(ResidueVm::getResidueInfo)
+                .map(ResidueVm::residueInfo)
                 .collect(Collectors.toList());
         return DistanceMatrix.builder()
                 .atomsPair(atomsPair)

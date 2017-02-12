@@ -6,8 +6,8 @@ import pl.poznan.put.pdb.analysis.PdbResidue;
 import pl.poznan.put.rna.torsion.RNATorsionAngleType;
 import pl.poznan.put.core.rnacommons.RnaUtils;
 import pl.poznan.put.core.rnamatrix.calculation.MatrixCalculation;
-import pl.poznan.put.core.structure.AngleData;
-import pl.poznan.put.core.structure.ResidueVm;
+import pl.poznan.put.core.structure.models.AngleData;
+import pl.poznan.put.core.structure.models.ResidueVm;
 import pl.poznan.put.torsion.MasterTorsionAngleType;
 
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class TorsionAnglesMatrixCalculation implements MatrixCalculation<Torsion
     private List<ResidueVm> getYLabels(final PdbCompactFragment fragment) {
         return fragment.getResidues()
                 .stream()
-                .map(ResidueVm::getResidueInfo)
+                .map(ResidueVm::residueInfo)
                 .collect(Collectors.toList());
     }
 

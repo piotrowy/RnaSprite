@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import pl.poznan.put.core.structure.AtomsPair;
+import pl.poznan.put.core.structure.models.AtomsPair;
 
 import java.util.List;
 

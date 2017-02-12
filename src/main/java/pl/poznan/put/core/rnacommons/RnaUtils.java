@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class RnaUtils {
 
-    public static final String ALL = "ALL";
+    private static final String ALL = "ALL";
 
     public static Set<RNATorsionAngleType> mapToRnaTorsionAngleType(Set<String> types) {
         if (types.contains(ALL) || types.isEmpty()) {
