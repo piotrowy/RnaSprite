@@ -22,28 +22,24 @@ public class TorsionAnglesMatrixCalculation implements MatrixCalculation<Torsion
     private static final String INVALID = "invalid";
     private static final String EMPTY = "-";
 
-    private List<List<AngleData>> parseFragment(final PdbCompactFragment fragment, final Set<RNATorsionAngleType> angles) {
+    private List<List<String>> parseFragment(final PdbCompactFragment fragment, final Set<RNATorsionAngleType> angles) {
         return fragment.getResidues()
                 .stream()
                 .map(residue -> parseResidue(fragment, residue, angles))
                 .collect(Collectors.toList());
     }
 
-    private List<AngleData> parseResidue(final PdbCompactFragment fragment, final PdbResidue residue, final Set<RNATorsionAngleType> angles) {
+    private List<String> parseResidue(final PdbCompactFragment fragment, final PdbResidue residue, final Set<RNATorsionAngleType> angles) {
         return angles.stream()
                 .map(angle -> setAngleValue(fragment, residue, angle))
                 .collect(Collectors.toList());
     }
 
-    private AngleData setAngleValue(final PdbCompactFragment fragment, final PdbResidue residue, final MasterTorsionAngleType angle) {
+    private String setAngleValue(final PdbCompactFragment fragment, final PdbResidue residue, final MasterTorsionAngleType angle) {
         if (fragment.getTorsionAngleValue(residue, angle).getValue().toString().equalsIgnoreCase(INVALID)) {
-            return AngleData.builder()
-                    .value(EMPTY)
-                    .build();
+            return EMPTY;
         } else {
-            return AngleData.builder()
-                    .value(DECIMAL_FORMAT_2.format(fragment.getTorsionAngleValue(residue, angle).getValue().getDegrees()))
-                    .build();
+            return DECIMAL_FORMAT_2.format(fragment.getTorsionAngleValue(residue, angle).getValue().getDegrees());
         }
     }
 

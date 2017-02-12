@@ -34,7 +34,7 @@ public class DistanceMatrixCalculation implements MatrixCalculation<DistanceMatr
                         .map(innerResidue -> outerResidue.hasAtom(AtomName.fromString(atoms.getFirst()))
                                 && innerResidue.hasAtom(AtomName.fromString(atoms.getSecond()))
                                 ? DECIMAL_FORMAT_2.format(outerResidue.findAtom(AtomName.fromString(atoms.getFirst()))
-                                .distanceTo(innerResidue.findAtom(AtomName.fromString(atoms.getSecond())))) : "-")
+                                .distanceTo(innerResidue.findAtom(AtomName.fromString(atoms.getSecond())))) : "0")
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }

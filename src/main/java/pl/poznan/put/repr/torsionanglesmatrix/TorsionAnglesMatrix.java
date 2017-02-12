@@ -13,11 +13,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class TorsionAnglesMatrix extends Matrix<ResidueVm, String, AngleData>
+public class TorsionAnglesMatrix extends Matrix<ResidueVm, String, String>
         implements MatrixFiltering<TorsionAnglesMatrix, Set<String>> {
 
     @Builder
-    public TorsionAnglesMatrix(List<ResidueVm> yLabels, List<String> xLabels, List<List<AngleData>> data) {
+    public TorsionAnglesMatrix(List<ResidueVm> yLabels, List<String> xLabels, List<List<String>> data) {
         super(yLabels, xLabels, data);
     }
 
@@ -35,7 +35,7 @@ public class TorsionAnglesMatrix extends Matrix<ResidueVm, String, AngleData>
                 .build();
     }
 
-    private List<List<AngleData>> filterData(List<String> angles) {
+    private List<List<String>> filterData(List<String> angles) {
         List<Integer> indexes = IntStream.range(0, getXLabels().size())
                 .filter(index -> angles.contains(getXLabels().get(index)))
                 .mapToObj(Integer::valueOf)
