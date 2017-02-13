@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment;
 import pl.poznan.put.core.session.SessionManager;
 import pl.poznan.put.core.session.caches.GenericMatrixCacheManager;
 import pl.poznan.put.core.session.caches.StructureCacheManager;
+import pl.poznan.put.tables.daos.PdbIdSessionIdDao;
 
 @Configuration
 public class DmSessionCache {
@@ -13,7 +14,8 @@ public class DmSessionCache {
     @Bean
     public GenericMatrixCacheManager<DistanceMatrix, ResiduesAtomsSpecification> getSessionCache(Environment env,
                                                                                                  StructureCacheManager structureCacheManager,
+                                                                                                 PdbIdSessionIdDao pdbIdSessionIdDao,
                                                                                                  SessionManager sessionManager) {
-        return new GenericMatrixCacheManager<>(env, structureCacheManager, sessionManager);
+        return new GenericMatrixCacheManager<>(env, structureCacheManager, pdbIdSessionIdDao, sessionManager);
     }
 }

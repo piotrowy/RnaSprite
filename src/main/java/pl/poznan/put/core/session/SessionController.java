@@ -26,7 +26,6 @@ public class SessionController {
 
     private final PdbIdValidator pdbIdValidator;
     private final SessionManager sessionManager;
-    private final SessionValidator sessionValidator;
 
     @RequestMapping("/pdbId/{id}")
     public final HttpEntity<UUID> sessionId(@PathVariable("id") final String id) throws InvalidArgumentException {
