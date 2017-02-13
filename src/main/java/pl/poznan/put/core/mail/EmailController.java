@@ -18,7 +18,7 @@ import javax.inject.Inject;
 
 @Slf4j
 @RestController
-@RequestMapping("/mail")
+@RequestMapping("/email")
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class EmailController {
 

@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment;
 import pl.poznan.put.core.rnamatrix.model.Matrix;
 import pl.poznan.put.core.rnamatrix.model.MtxStructure;
 import pl.poznan.put.core.session.SessionManager;
+import pl.poznan.put.tables.daos.PdbIdSessionIdDao;
 
 import java.util.Date;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class GenericMatrixCacheManager<T extends Matrix, U> {
     private static final Integer DELAY = 10;
     private final Environment env;
     private final StructureCacheManager structureCacheManager;
+    private final PdbIdSessionIdDao pdbIdSessionIdDao;
     private final SessionManager sessionManager;
     private Map<UUID, MatrixCache<T, U>> matrixCacheMap = new ConcurrentHashMap<>();
 
@@ -51,6 +53,7 @@ public class GenericMatrixCacheManager<T extends Matrix, U> {
                 .forEach(map -> {
                     log.debug("Removed session id: {}", map.getKey());
                     matrixCacheMap.remove(map.getKey());
+                    pdbIdSessionIdDao.deleteById(pdbIdSessionIdDao.fetchOneBySessionId(map.getKey()).getId());
                 });
         structureCacheManager.getKeys().stream().filter(sessionManager::sessionExistForStructure).forEach(structureCacheManager::remove);
         log.info("SESSION CRON - END");

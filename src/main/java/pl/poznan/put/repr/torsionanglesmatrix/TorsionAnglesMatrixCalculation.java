@@ -20,7 +20,7 @@ import javax.inject.Named;
 public class TorsionAnglesMatrixCalculation implements MatrixCalculation<TorsionAnglesMatrix, Set<String>> {
 
     private static final String INVALID = "invalid";
-    private static final String EMPTY = "-";
+    private static final String EMPTY = "0";
 
     private List<List<String>> parseFragment(final PdbCompactFragment fragment, final Set<RNATorsionAngleType> angles) {
         return fragment.getResidues()

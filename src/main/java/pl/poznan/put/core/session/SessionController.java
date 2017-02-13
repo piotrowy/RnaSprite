@@ -32,7 +32,7 @@ public class SessionController {
     public final HttpEntity<UUID> sessionId(@PathVariable("id") final String id) throws InvalidArgumentException {
         pdbIdValidator.validate(id);
         try {
-            return new ResponseEntity<>(sessionManager.getSession(id), HttpStatus.OK);
+            return new ResponseEntity<>(sessionManager.getSession(id.toUpperCase()), HttpStatus.OK);
         } catch (Exception ex) {
             log.error("Unable to parse session request. {}", ex);
             throw new InvalidArgumentException(ex);
